@@ -1,4 +1,4 @@
-import 'package:client/other_file/variable.dart';
+import 'package:client/variable.dart';
 import 'package:client/widgets/animatedtextkit.dart';
 import 'package:flutter/material.dart';
 

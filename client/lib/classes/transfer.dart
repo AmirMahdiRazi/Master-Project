@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:plugin_wifi_connect/plugin_wifi_connect.dart';
+
 import 'client_class.dart';
 
 class TransferData {
@@ -15,9 +17,10 @@ class TransferData {
   void transferDataWifi() async {
     try {
       print('${client.ipServer}, ${client.port}');
-      final socket = await Socket.connect(client.ipServer, client.port);
+      final socket = await Socket.connect(client.ipServer, client.port,
+          timeout: Duration(seconds: 3));
 
-      print('12345');
+      print('44444');
       client.logs.add(
           "Connected to: ${socket.remoteAddress.address}:${socket.remotePort}");
 
@@ -35,6 +38,7 @@ class TransferData {
             };
             if (client.result!["result"] == '200') {
               socket.close();
+              PluginWifiConnect.disconnect();
             }
           }
         },

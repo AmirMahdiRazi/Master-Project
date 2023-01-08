@@ -1,4 +1,4 @@
-import 'package:client/other_file/variable.dart';
+import 'package:client/variable.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 
 import 'package:flutter/material.dart';

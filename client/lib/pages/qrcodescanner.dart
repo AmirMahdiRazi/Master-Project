@@ -3,15 +3,18 @@ import 'dart:io';
 
 import 'package:android_id/android_id.dart';
 import 'package:client/classes/transfer.dart';
-import 'package:client/other_file/variable.dart';
+import 'package:client/variable.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:plugin_wifi_connect/plugin_wifi_connect.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:wifi_iot/wifi_iot.dart';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 
 bool _pause = false;
+
+String? _result;
+String? _description;
+
+enum _Status { serverOnline, serverOffline, waited }
 
 class QRCodeScanner extends StatefulWidget {
   const QRCodeScanner({super.key});
@@ -27,32 +30,21 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
   String? resultCode;
   String? description;
   bool isConnected = false;
-  late final subscription;
-
-  StreamController<bool> streamContoller = StreamController<bool>();
 
   QRViewController? controller;
-
+  StreamController<_Status> streamContoller = StreamController<_Status>();
   // Map<String, String>? result;
 
   @override
   void initState() {
-    streamContoller.stream.listen((event) async {
-      await Future.delayed(Duration(seconds: 10));
-
-      // print('d' * 50);
-      // status();
-      print('15' * 20);
-      TransferData().transferDataWifi();
-    });
-
+    _getAndroidId();
     super.initState();
   }
 
   @override
   void dispose() {
     controller?.dispose();
-    subscription.cancel();
+    streamContoller.close();
     super.dispose();
   }
 
@@ -163,20 +155,22 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
           (() {
             if (barcode.code != null && barcode.code!.length >= 0) {
               controller.pauseCamera();
-              // WiFiForIoTPlugin.disconnect();
+
+              PluginWifiConnect.disconnect();
+
               List<String> data = data_extraction(barcode.code!);
-              // ** mahdi-123456789-c0:a8:1:64-3000-r542un
+
+              // ** mahdi-123456789-c0:a8:1:64-3000-r542un 1.100
+              // ** reza-123456789-c0:a8:89:1-3000-rz542un 137.1
               TransferData().client.ipServer = data[2];
               TransferData().client.port = int.parse(data[3]);
               TransferData().client.code = data[4];
-              TransferData().client.stdNumber = '9711126050';
-              // streamContoller.sink.add(true);
-              WiFiForIoTPlugin.connect(data[0],
-                      password: data[1], security: NetworkSecurity.WPA)
+
+              PluginWifiConnect.connectToSecureNetwork(data[0], data[1])
                   .then((value) {
-                //success to connect Wifi
-                if (value.toString() == 'true') {
-                  streamContoller.sink.add(true);
+                if (value == true) {
+                  TransferData().transferDataWifi();
+                  status();
                 } else {
                   controller.resumeCamera();
                 }
@@ -208,97 +202,101 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
 
   void status() async {
     showDialog(
+      barrierDismissible: false,
       context: context,
       builder: ((context) {
         return Dialog(
-          resultCode: resultCode,
-          description: description,
+          controller: controller!,
+          streamcontroller: streamContoller,
         );
       }),
-    );
-
-    Future.delayed(
-      Duration(seconds: 3),
-      () {
-        if (TransferData().client.result != null) {
-          if (TransferData().client.result!["result"] == '200') {
-            Navigator.pushNamed(context, '/');
-          } else {
-            setState(() {
-              resultCode = TransferData().client.result!["result"];
-              description = TransferData().client.result!['description'];
-            });
-            TransferData().client.result = null;
-          }
-        }
-      },
     );
   }
 }
 
 class Dialog extends StatefulWidget {
-  const Dialog({
-    Key? key,
-    required this.resultCode,
-    required this.description,
-  }) : super(key: key);
-  final String? resultCode;
-  final String? description;
-
+  Dialog({Key? key, required this.controller, required this.streamcontroller})
+      : super(key: key);
+  final StreamController<_Status> streamcontroller;
+  final QRViewController controller;
   @override
   State<Dialog> createState() => _DialogState();
 }
 
 class _DialogState extends State<Dialog> {
   @override
-  void initState() {
-    Future.delayed(Duration(seconds: 5), () {
-      if (TransferData().client.result != null &&
-          TransferData().client.result!["result"] != '200')
-        Future.delayed(Duration(seconds: 5), (() {
-          Navigator.of(context).pop();
-        }));
-      Navigator.of(context).pop();
-    });
-    super.initState();
+  void dispose() {
+    widget.streamcontroller.close();
+    getStream();
+    super.dispose();
+  }
+
+  Stream<_Status> getStream() async* {
+    int i = 0;
+
+    await Future.delayed(Duration(seconds: 5));
+    if (TransferData().client.result != null) {
+      if (TransferData().client.result!["result"] == '200') {
+        Navigator.of(context).pop();
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/second', ((route) => false));
+      } else if (TransferData().client.result!["result"] != '200') {
+        setState(() {
+          _result = TransferData().client.result!["result"];
+          _description = TransferData().client.result!["description"];
+          TransferData().client.result = null;
+        });
+        yield _Status.serverOffline;
+      } else {
+        setState(() {
+          _result = 'مشکلی پیش آمده است';
+          _description = 'لطفا دوباره تلاش کنید';
+        });
+        yield _Status.waited;
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: TransferData().client.result == null
-          ? Center(child: CircularProgressIndicator())
-          : SizedBox(
-              height: 0,
-            ),
-      content: TransferData().client.result == null
-          ? Text(
-              'لطفا صبر کنید',
-              textAlign: TextAlign.center,
-              textDirection: TextDirection.rtl,
-            )
-          : Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('${widget.resultCode}'),
-                Text('${widget.description}'),
-              ],
-            ),
-      actions: TransferData().client.result == null
-          ? []
-          : [
-              ElevatedButton(
-                onPressed: () {
-                  _pause = true;
-                  Navigator.of(context).pop();
-                },
-                child: Text(
-                  'متوجه شدم',
-                  textDirection: TextDirection.rtl,
-                  textAlign: TextAlign.left,
-                ),
-              )
-            ],
-    );
+    return StreamBuilder<Object>(
+        stream: getStream(),
+        builder: (context, snapshot) {
+          return AlertDialog(
+            title: _result == null
+                ? Center(child: CircularProgressIndicator())
+                : null,
+            content: _result == null
+                ? Text(
+                    'لطفا صبر کنید',
+                    textAlign: TextAlign.center,
+                    textDirection: TextDirection.rtl,
+                  )
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('${_result}'),
+                      Text('${_description}'),
+                    ],
+                  ),
+            actions: _result == null
+                ? []
+                : [
+                    ElevatedButton(
+                      onPressed: () {
+                        _pause = true;
+                        TransferData().client.result = null;
+                        widget.controller.resumeCamera();
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        'متوجه شدم',
+                        textDirection: TextDirection.rtl,
+                        textAlign: TextAlign.left,
+                      ),
+                    )
+                  ],
+          );
+        });
   }
 }

@@ -6,7 +6,7 @@ import 'package:client/widgets/checkboxlisttile.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/services.dart';
-import 'package:client/other_file/variable.dart';
+import 'package:client/variable.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:client/classes/transfer.dart';
@@ -76,7 +76,7 @@ class _HomePageState extends State<Info_Page> with TickerProviderStateMixin {
             ),
           ),
           Visibility(
-            visible: true,
+            visible: _isFill,
             child: Column(
               children: [
                 DesignedAnimatedButton(
@@ -107,8 +107,13 @@ class _HomePageState extends State<Info_Page> with TickerProviderStateMixin {
   }
 
   void checked() {
-    isCheck ? saveOnDisk() : removeOnDisk();
-    readOnDisk();
+    isCheck
+        ? () {
+            saveOnDisk();
+            readOnDisk();
+          }
+        : removeOnDisk();
+
     isCheck
         ? result_saveOnDisk = (TransferData().client.stdNumber.isEmpty)
             ? 'برای ذخیره کردن مشکلی پیش آمده است'
