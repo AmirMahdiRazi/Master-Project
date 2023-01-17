@@ -107,18 +107,18 @@ class _HomePageState extends State<Info_Page> with TickerProviderStateMixin {
   }
 
   void checked() {
-    isCheck
-        ? () {
-            saveOnDisk();
-            readOnDisk();
-          }
-        : removeOnDisk();
+    isCheck ? saveOnDisk() : removeOnDisk();
 
     isCheck
         ? result_saveOnDisk = (TransferData().client.stdNumber.isEmpty)
             ? 'برای ذخیره کردن مشکلی پیش آمده است'
             : ''
         : null;
+  }
+
+  void saveAndRead() {
+    saveOnDisk();
+    readOnDisk();
   }
 
   void intallizer() async {

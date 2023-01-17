@@ -37,7 +37,6 @@ class _DesignedCheckboxListTileState extends State<DesignedCheckboxListTile> {
               : null,
           value: isCheck,
           onChanged: ((value) {
-            widget.function;
             setState(() {
               isCheck = value!;
             });

@@ -3,17 +3,15 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
-import 'package:excel/excel.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:network_info_plus/network_info_plus.dart';
-import 'package:server/animation/button.dart';
-import 'package:server/animation/toggle.dart';
-import 'package:server/globalvariable.dart';
+
 import 'package:server/pages_serverinit/hotspotsection.dart';
 import 'package:server/pages_serverinit/wifisection.dart';
-import 'package:server/pages_serverinit/textfield.dart';
-import 'package:server/server/server.dart';
+
+import 'package:server/server/base.dart';
 
 import '../constrant.dart';
 
@@ -31,10 +29,15 @@ class _ServerInitState extends State<ServerInit> {
   TextEditingController textControllerPasswordWifi = TextEditingController();
   TextEditingController textControllerSSIDHot = TextEditingController();
   TextEditingController textControllerPassHot = TextEditingController();
-  Future<Status> state = Server().checkWifi();
+  Future<Status> state = Base().server.checkWifi();
   final info = NetworkInfo();
   _Stauts _stauts = _Stauts.hotspot;
   bool positive = true;
+  @override
+  void initState() {
+    // checker();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,10 +72,12 @@ class _ServerInitState extends State<ServerInit> {
             ],
             onChanged: (b) async {
               checker();
-              setState(() {
-                positive = Server().connection == Status.hotspot ? false : true;
-              });
+
               await Future.delayed(Duration(seconds: 1));
+              setState(() {
+                positive =
+                    Base().server.connection == Status.hotspot ? true : false;
+              });
             },
             colorBuilder: (b) => b ? Colors.red : Colors.green,
             iconBuilder: (value) =>
@@ -96,7 +101,7 @@ class _ServerInitState extends State<ServerInit> {
               if (snapshot.hasData) {
                 if (!positive) {
                   return WifiPage(
-                    textEditingControllerPassword: textControllerPasswordWifi,
+                    textControllerPassword: textControllerPasswordWifi,
                   );
                 } else {
                   return HotspotPage(
@@ -113,20 +118,6 @@ class _ServerInitState extends State<ServerInit> {
   }
 
   Future<void> checker() async {
-    await Server().checkWifi();
-  }
-
-  Future<int> getUnusedPort(String address) async {
-    int port = await ServerSocket.bind(address, 0).then((socket) {
-      var port = socket.port;
-      socket.close();
-      return port;
-    });
-    setState(() {});
-    if (port >= 0) {
-      return port;
-    } else {
-      return -1;
-    }
+    await Base().server.checkWifi();
   }
 }

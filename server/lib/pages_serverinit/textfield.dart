@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:server/constrant.dart';
@@ -9,11 +11,14 @@ class DesignedTextField extends StatefulWidget {
       required this.label,
       required this.help,
       required this.textEditingController,
-      required this.onChange});
+      required this.onChange,
+      this.icon,
+      this.pass = null});
   String name, label, help;
-
+  bool? pass;
   TextEditingController textEditingController;
   VoidCallback onChange;
+  IconData? icon;
   @override
   State<DesignedTextField> createState() => _DesignedTextFieldState();
 }
@@ -32,8 +37,11 @@ class _DesignedTextFieldState extends State<DesignedTextField> {
           textDirection: TextDirection.rtl,
         ),
         SizedBox(
+          height: 90,
           width: 500,
           child: TextFormField(
+              style: TextStyle(fontSize: 25),
+              obscureText: widget.pass ?? false,
               textAlign: TextAlign.center,
               controller: widget.textEditingController,
               textDirection: TextDirection.rtl,
@@ -41,7 +49,28 @@ class _DesignedTextFieldState extends State<DesignedTextField> {
               textInputAction: TextInputAction.next,
               decoration: InputDecoration(
                 helperText: widget.help,
-                suffixIcon: Icon(Icons.cable_rounded),
+                suffixIcon: widget.pass != null
+                    ? widget.pass!
+                        ? IconButton(
+                            splashRadius: 1,
+                            icon: Icon(Icons.visibility),
+                            onPressed: () {
+                              setState(() {});
+                              if (widget.pass != null) {
+                                widget.pass = false;
+                              }
+                            },
+                          )
+                        : IconButton(
+                            splashRadius: 1,
+                            icon: Icon(Icons.visibility_off),
+                            onPressed: () {
+                              setState(() {});
+                              if (widget.pass != null) {
+                                widget.pass = true;
+                              }
+                            })
+                    : Icon(widget.icon),
                 hintTextDirection: TextDirection.rtl,
                 labelStyle: TextStyle(textBaseline: TextBaseline.ideographic),
                 contentPadding:
@@ -60,10 +89,6 @@ class _DesignedTextFieldState extends State<DesignedTextField> {
                   borderRadius: BorderRadius.all(Radius.circular(32.0)),
                 ),
               ),
-              keyboardType: TextInputType.datetime,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.digitsOnly
-              ],
               onChanged: (value) {
                 widget.onChange.call();
               }),

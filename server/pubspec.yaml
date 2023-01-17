@@ -44,6 +44,9 @@ dependencies:
   animated_toggle_switch: ^0.6.1
   get: ^4.6.5
   network_info_plus: ^3.0.1
+  auto_size_widget: ^0.0.4
+  desktop_window: ^0.4.0
+  
 
 dev_dependencies:
   flutter_test:

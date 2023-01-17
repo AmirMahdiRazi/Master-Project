@@ -1,25 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:server/page_attendance/attendance.dart';
-import 'package:server/pages_serverinit/serverInitializer.dart';
-import 'package:server/server/server.dart';
-import 'package:server/server/server.dart';
-import 'package:network_info_plus/network_info_plus.dart';
+import 'package:server/page_attendance/attendance_page.dart';
+import 'package:server/page_initalapp/intialapp_page.dart';
+
+import 'package:server/pages_serverinit/serverInitializer_page.dart';
+import 'package:server/server/base.dart';
+import 'package:desktop_window/desktop_window.dart';
 
 void main() async {
-  Server server = Server();
+  Base server = Base();
 
   runApp(const MyApp());
-  // final info = NetworkInfo();
-
-  // var wifiName = await info.getWifiName(); // "FooNetwork"
-  // var wifiBSSID = await info.getWifiBSSID(); // 11:22:33:44:55:66
-  // var wifiIP = await info.getWifiIP(); // 192.168.1.43
-  // print('4444444  $wifiName');
-  // var wifiIPv6 =
-  //     await info.getWifiIPv6(); // 2001:0db8:85a3:0000:0000:8a2e:0370:7334
-  // var wifiSubmask = await info.getWifiSubmask(); // 255.255.255.0
-  // var wifiBroadcast = await info.getWifiBroadcast(); // 192.168.1.255
-  // var wifiGateway = await info.getWifiGatewayIP();
+  checkDevice();
 }
 
 class MyApp extends StatelessWidget {
@@ -33,10 +26,18 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light(),
       initialRoute: '/',
       routes: {
-        '/': (context) => ServerInit(),
-        '/first': (context) => Container(),
-        '/second': (context) => Container(),
+        '/': (context) => const InitalApp(),
+        '/first': (context) => const Attend(),
       },
     );
   }
+}
+
+void checkDevice() async {
+  if (Platform.isWindows) await testWindowFunctions();
+}
+
+Future testWindowFunctions() async {
+  await DesktopWindow.setFullScreen(true);
+  await DesktopWindow.setMinWindowSize(const Size(1000, 800));
 }

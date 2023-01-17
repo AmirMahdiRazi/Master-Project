@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:server/animation/button.dart';
 import 'package:server/pages_serverinit/textfield.dart';
-import 'package:server/server/server.dart';
+import 'package:server/server/base.dart';
 
 class HotspotPage extends StatefulWidget {
   HotspotPage({
@@ -22,27 +22,38 @@ class HotspotPage extends StatefulWidget {
 }
 
 class _HotspotPageState extends State<HotspotPage> {
-  String? wifiName, wifiIP;
   String listIP = '';
-  late Future<String> IPS;
+
   String ethernet = '';
   List<String> listIPS = [];
   bool isClickable = true;
+  late bool _stop;
 
   @override
   void initState() {
-    Timer.periodic(Duration(seconds: 1), ((timer) => ips()));
+    _stop = false;
+    Timer.periodic(Duration(seconds: 1), ((timer) {
+      if (_stop) {
+        timer.cancel();
+      }
+      _ips();
+    }));
 
-    IPS = checker();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _stop = true;
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Object>(
-        future: IPS,
+        future: checker(),
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.hasData && snapshot.data.toString().isNotEmpty) {
             listIPS = clean(snapshot.data.toString());
             return Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -51,6 +62,7 @@ class _HotspotPageState extends State<HotspotPage> {
                   name: 'نام هات اسپات(Hotspot SSID)',
                   label: 'HotSpotSSID',
                   help: 'HotSpotSSID',
+                  icon: Icons.wifi_tethering,
                   textEditingController: widget.textControllerSSIDHot,
                   onChange: () {
                     setState(() {});
@@ -66,6 +78,7 @@ class _HotspotPageState extends State<HotspotPage> {
                   name: 'پسورد(Password)',
                   label: 'Password',
                   help: 'Password',
+                  pass: true,
                   textEditingController: widget.textControllerPassHot,
                   onChange: () {
                     setState(() {});
@@ -78,27 +91,69 @@ class _HotspotPageState extends State<HotspotPage> {
                   },
                 ),
                 Column(
-                    children: listIPS
-                        .map(
-                          (e) => AbsorbPointer(
-                            absorbing: isClickable,
-                            child: DesignedAnimatedButton(
-                                text: e,
-                                width: 300,
-                                onPress: () {
-                                  if (widget.textControllerSSIDHot.text
-                                          .isNotEmpty &&
-                                      widget.textControllerPassHot.text
-                                          .isNotEmpty) {
-                                  } else {}
-                                }),
-                          ),
-                        )
-                        .toList())
+                  children: [
+                    Text(
+                      "IP در دسترس",
+                      textDirection: TextDirection.rtl,
+                      style: TextStyle(
+                          fontFamily: "bnazanin",
+                          fontSize: 25,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: listIPS
+                            .map(
+                              (e) => AbsorbPointer(
+                                absorbing: isClickable,
+                                child: Container(
+                                  height: 100,
+                                  child: DesignedAnimatedButton(
+                                      borderRadius: 30,
+                                      height: 80,
+                                      text: e,
+                                      width: 500,
+                                      onPress: () {
+                                        Base().server.pass =
+                                            widget.textControllerPassHot.text;
+                                        Base().server.user =
+                                            widget.textControllerSSIDHot.text;
+                                        Base().server.ip = e.split(": ")[1];
+                                        Base()
+                                            .server
+                                            .getUnusedPort(e.split(": ")[1]);
+                                        Future.delayed(
+                                            Duration(milliseconds: 505), () {
+                                          Navigator.pushNamed(
+                                              context, '/first');
+                                        });
+                                      }),
+                                ),
+                              ),
+                            )
+                            .toList()),
+                  ],
+                )
               ],
             );
           } else {
-            return CircularProgressIndicator();
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "لطفا hotspot را روشن کنید.",
+                  textDirection: TextDirection.rtl,
+                  style: TextStyle(fontFamily: "bnazanin", fontSize: 30),
+                ),
+                SizedBox(
+                  height: 50,
+                ),
+                CircularProgressIndicator(),
+              ],
+            );
           }
         });
   }
@@ -107,7 +162,7 @@ class _HotspotPageState extends State<HotspotPage> {
     return data.split('*-*').map((e) => e).toList();
   }
 
-  Future<void> ips() async {
+  Future<void> _ips() async {
     String temp = '';
 
     for (var interface in await NetworkInterface.list()) {
@@ -133,7 +188,7 @@ class _HotspotPageState extends State<HotspotPage> {
   Future<String> checker() async {
     setState(() {});
     if (listIP.isEmpty) {
-      ips();
+      _ips();
       await Future.delayed(const Duration(seconds: 1));
 
       return listIP;
