@@ -8,6 +8,7 @@ import 'package:server/constrant.dart';
 class Server {
   late String ip, user, pass, code;
   late int port;
+  late String path;
   ServerSocket? _serverSocket;
   bool running = false;
   List<String> logs = [];
@@ -85,6 +86,10 @@ class Server {
       return connection;
     }
   }
+
+  // String path() {
+  //   return directory.path.replaceAll(r'\\', "/");
+  // }
 
   void getUnusedPort(String address) async {
     int portUnused = await ServerSocket.bind(address, 0).then((socket) {

@@ -39,18 +39,18 @@ class _AttendState extends State<Attend> {
             ],
             onChanged: (b) async {
               Base().server.startOrStop();
-              await Future.delayed(Duration(seconds: 1));
+              await Future.delayed(const Duration(seconds: 1));
               setState(() {
                 positive = !Base().server.running;
               });
             },
             colorBuilder: (b) => b ? Colors.red : Colors.green,
             iconBuilder: (value) => value
-                ? Icon(
+                ? const Icon(
                     Icons.power_settings_new_sharp,
                     size: 35,
                   )
-                : Icon(
+                : const Icon(
                     Icons.power_settings_new_sharp,
                     size: 35,
                   ),
@@ -69,7 +69,7 @@ class _AttendState extends State<Attend> {
                             letterSpacing: 5)),
                   ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 5,
           )
         ],
@@ -94,8 +94,8 @@ class _AttendState extends State<Attend> {
           ),
         ),
       ),
-      backgroundColor: Color.fromARGB(255, 103, 3, 233),
-      body: Bisection(),
+      backgroundColor: const Color.fromARGB(255, 103, 3, 233),
+      body: const Bisection(),
     );
   }
 }

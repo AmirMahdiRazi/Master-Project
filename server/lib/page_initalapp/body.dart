@@ -1,14 +1,14 @@
 import 'dart:io';
 
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:server/animation/button.dart';
-import 'package:server/page_initalapp/coursename.dart';
-import 'package:server/page_initalapp/filepickerandtable.dart';
-import 'package:server/page_initalapp/textandtextfield.dart';
+import 'package:server/animation/textkit.dart';
+
+import 'package:server/page_initalapp/Details.dart';
+import 'package:server/page_initalapp/table.dart';
 
 class Body extends StatefulWidget {
   const Body({super.key});
@@ -21,6 +21,7 @@ class _BodyState extends State<Body> {
   TextEditingController _textControllerFile = TextEditingController();
   TextEditingController _textControllerCourse = TextEditingController();
   List<List<String>> listData = [];
+  var fileExcelPath = '';
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -28,18 +29,20 @@ class _BodyState extends State<Body> {
       children: [
         filePicker(),
         listData.isNotEmpty
-            ? table()
+            ? DesginedTable(
+                Datas: listData,
+              )
             : Container(
-                color: Colors.white,
-                child: Text(
-                  "لطفا مسیر فایل اکسل را انتخاب کنید",
-                  style: TextStyle(
-                      fontSize: 30,
-                      fontFamily: 'bnazanin',
-                      fontWeight: FontWeight.bold),
+                color: Colors.white.withOpacity(.2),
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: DesignAnimatedTextKit(
+                    text: ".را انتخاب کنید excel لطفا مسیر فایل ",
+                    fontsize: 50,
+                  ),
                 ),
               ),
-        listData.isNotEmpty ? TextAndTextField(datas: listData) : SizedBox(),
+        listData.isNotEmpty ? Details(datas: listData) : SizedBox(),
       ],
     );
   }
@@ -55,8 +58,8 @@ class _BodyState extends State<Body> {
           child: TextField(
             readOnly: true,
             controller: _textControllerFile,
-            style: TextStyle(fontSize: 20),
-            decoration: InputDecoration(
+            style: const TextStyle(fontSize: 20),
+            decoration: const InputDecoration(
                 border: InputBorder.none, contentPadding: EdgeInsets.all(10)),
           ),
         ),
@@ -68,7 +71,7 @@ class _BodyState extends State<Body> {
               splashRadius: 1,
               iconSize: 25,
               onPressed: _pickerFile,
-              icon: Icon(Icons.folder_open),
+              icon: const Icon(Icons.folder_open),
             ),
           ),
         )
@@ -82,62 +85,67 @@ class _BodyState extends State<Body> {
       allowedExtensions: ['xlsx'],
     );
     if (result == null) return;
-    PlatformFile file = result.files.single;
+    String file = result.files.single.path.toString();
     setState(() {});
-    _textControllerFile.text = file.path.toString();
+    _textControllerFile.text = file.toString();
+
+    fileExcelPath = _textControllerFile.text;
     try {
-      var file = _textControllerFile.text;
-      var bytes = File(file).readAsBytesSync();
+      var bytes = File(fileExcelPath).readAsBytesSync();
       var excel = Excel.decodeBytes(bytes);
+
       for (var row in excel.tables[excel.tables.keys.first]!.rows) {
         listData.add(row.map((e) => e!.value.toString()).toList());
       }
-    } catch (e) {}
+
+      listData.insert(
+          0, List.generate(listData[0].length, (index) => "ستون: $index"));
+    } catch (e) {
+      dialog();
+    }
   }
 
-  Widget table() {
-    return Column(
-      children: [
-        Container(
-          height: 50,
-          child: ListView(
-            children: [
-              Container(
-                height: 50,
-                child: Card(
-                  margin: EdgeInsets.all(8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: List.generate(
-                        listData[0].length,
-                        (index) => Text(
-                              "ستون : $index",
-                              textAlign: TextAlign.center,
-                            )),
-                  ),
-                ),
-              )
-            ],
-          ),
+  Future dialog() {
+    return showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text(
+          "خطا",
+          style: TextStyle(fontFamily: 'bnazanin', fontSize: 20),
+          textAlign: TextAlign.right,
         ),
-        SizedBox(
-          height: 200,
-          child: ListView.builder(
-            itemCount: listData.length,
-            itemBuilder: ((context, index) {
-              return Card(
-                margin: EdgeInsets.all(8),
-                child: ListTile(
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: listData[index].map((e) => Text("$e")).toList(),
-                  ),
-                ),
-              );
-            }),
-          ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              "تعداد ستون های تمامی سطر ها برابر نیست",
+              style: TextStyle(fontFamily: 'bnazanin', fontSize: 20),
+            ),
+            Text(
+              "$fileExcelPath",
+              style: TextStyle(fontFamily: 'bnazanin', fontSize: 20),
+            ),
+          ],
         ),
-      ],
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              _textControllerFile.clear();
+              fileExcelPath = '';
+              listData.clear();
+              setState(() {});
+              Navigator.of(ctx).pop();
+            },
+            child: Container(
+              padding: const EdgeInsets.all(14),
+              child: const Text(
+                "باشه",
+                style: TextStyle(fontFamily: 'bnazanin', fontSize: 25),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

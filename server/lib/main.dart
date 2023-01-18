@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:server/page_attendance/attendance_page.dart';
 import 'package:server/page_initalapp/intialapp_page.dart';
 
-import 'package:server/pages_serverinit/serverInitializer_page.dart';
 import 'package:server/server/base.dart';
 import 'package:desktop_window/desktop_window.dart';
 
 void main() async {
   Base server = Base();
+
+  server.server.path = Directory.current.parent.path;
 
   runApp(const MyApp());
   checkDevice();

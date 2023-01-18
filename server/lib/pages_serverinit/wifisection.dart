@@ -6,6 +6,7 @@ import 'package:server/animation/button.dart';
 import 'package:server/pages_serverinit/textfield.dart';
 import 'package:server/server/base.dart';
 
+// ignore: must_be_immutable
 class WifiPage extends StatefulWidget {
   WifiPage({super.key, required this.textControllerPassword});
 
@@ -22,10 +23,11 @@ class _WifiPageState extends State<WifiPage> {
   @override
   void initState() {
     _stop = false;
+    // ignore: prefer_is_empty
     isNotClickable = widget.textControllerPassword.text.toString().length >= 0
         ? false
         : true;
-    Timer.periodic(Duration(seconds: 1), (timer) {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_stop) timer.cancel();
       _ips();
     });
@@ -90,6 +92,7 @@ class _WifiPageState extends State<WifiPage> {
           } else {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              // ignore: prefer_const_literals_to_create_immutables
               children: [
                 const Text(
                   "لطفا Wifi را روشن کنید.",
@@ -107,8 +110,6 @@ class _WifiPageState extends State<WifiPage> {
   }
 
   Future<bool> _ips() async {
-    String temp = '';
-    bool isWifiEnable = false;
     NetworkInfo info = NetworkInfo();
     try {
       wifiName = await info.getWifiName() ?? '';

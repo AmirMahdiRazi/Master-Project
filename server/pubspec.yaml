@@ -90,7 +90,7 @@ flutter:
     - family: bnazanin
       fonts:
         - asset: assets/fonts/bnazanin.ttf
-          style: italic
+          weight: 900
           
   #   - family: Trajan Pro
   #     fonts:

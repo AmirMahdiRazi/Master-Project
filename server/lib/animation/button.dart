@@ -24,13 +24,13 @@ class DesignedAnimatedButton extends StatelessWidget {
       height: height,
       width: width,
       text: text,
-      textStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
-      gradient: LinearGradient(colors: [
+      textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+      gradient: const LinearGradient(colors: [
         Color.fromARGB(139, 0, 253, 0),
         Color.fromARGB(137, 0, 255, 242)
       ]),
       selectedGradientColor:
-          LinearGradient(colors: [Colors.pinkAccent, Colors.purpleAccent]),
+          const LinearGradient(colors: [Colors.pinkAccent, Colors.purpleAccent]),
       isReverse: true,
       selectedTextColor: Colors.black,
       transitionType: TransitionType.LEFT_CENTER_ROUNDER,

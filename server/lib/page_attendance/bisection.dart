@@ -1,10 +1,7 @@
-import 'dart:async';
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 
 import 'package:server/page_attendance/qrcode.dart';
-import 'package:server/server/base.dart';
 import 'package:server/temp.dart';
 
 class Bisection extends StatefulWidget {
@@ -35,14 +32,14 @@ class _BisectionState extends State<Bisection> {
                   semanticContainer: true,
                   margin: const EdgeInsets.all(10),
                   child: ListTile(
-                    title: Container(
+                    title: SizedBox(
                       height: 70,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Text(
                             data[index][0],
-                            style: TextStyle(fontSize: 30),
+                            style: const TextStyle(fontSize: 30),
                           ),
                           Text(data[index][3]),
                           Text(data[index][1]),

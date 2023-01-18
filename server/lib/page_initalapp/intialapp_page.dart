@@ -9,7 +9,7 @@ class InitalApp extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
+        title: const Text(
           "درس جدید",
           style: TextStyle(fontFamily: "bnazanin", fontSize: 30),
         ),
@@ -34,8 +34,19 @@ class InitalApp extends StatelessWidget {
           ),
         ),
       ),
-      backgroundColor: Color.fromARGB(255, 59, 1, 134),
-      body: Body(),
+      backgroundColor: const Color.fromARGB(255, 0, 110, 129),
+      body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color.fromARGB(255, 0, 110, 129),
+                Color.fromARGB(255, 5, 141, 1),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+          child: const Body()),
     );
   }
 }

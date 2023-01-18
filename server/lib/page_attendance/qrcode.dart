@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:server/server/base.dart';
 
+// ignore: must_be_immutable
 class QRGenearator extends StatefulWidget {
   QRGenearator({super.key, required this.size});
 
@@ -22,7 +23,7 @@ class _QRGenearatorState extends State<QRGenearator> {
   void initState() {
     Base().server.ipConvert();
     _stop = false;
-    Timer.periodic(Duration(seconds: 30), (t) {
+    Timer.periodic(const Duration(seconds: 30), (t) {
       Base().server.code = random.nextInt(9999).toString();
       if (_stop) {
         t.cancel();

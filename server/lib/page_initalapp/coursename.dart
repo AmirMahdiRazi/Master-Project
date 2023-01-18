@@ -15,21 +15,26 @@ class _CourseNameState extends State<CourseName> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
+        const Text(
           "نام درس:",
           style: TextStyle(
               color: Colors.white, fontFamily: "bnazanin", fontSize: 30),
         ),
-        SizedBox(
+        const SizedBox(
           width: 10,
         ),
         Container(
           color: Colors.white,
           width: 300,
-          child: TextField(
-            onChanged: widget.function,
-            controller: widget.textEditingController,
-            style: TextStyle(fontSize: 28),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              onChanged: widget.function,
+              decoration: const InputDecoration(
+                  border: InputBorder.none, contentPadding: EdgeInsets.all(10)),
+              controller: widget.textEditingController,
+              style: const TextStyle(fontSize: 28),
+            ),
           ),
         ),
       ],

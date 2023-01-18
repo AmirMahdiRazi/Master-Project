@@ -1,8 +1,4 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:server/constrant.dart';
 
 class DesignedTextField extends StatefulWidget {
   DesignedTextField(
@@ -30,7 +26,7 @@ class _DesignedTextFieldState extends State<DesignedTextField> {
       children: [
         Text(
           widget.name,
-          style: TextStyle(
+          style: const TextStyle(
               fontFamily: 'bnazanin',
               fontWeight: FontWeight.w900,
               fontSize: 20),
@@ -40,7 +36,7 @@ class _DesignedTextFieldState extends State<DesignedTextField> {
           height: 90,
           width: 500,
           child: TextFormField(
-              style: TextStyle(fontSize: 25),
+              style: const TextStyle(fontSize: 25),
               obscureText: widget.pass ?? false,
               textAlign: TextAlign.center,
               controller: widget.textEditingController,
@@ -53,7 +49,7 @@ class _DesignedTextFieldState extends State<DesignedTextField> {
                     ? widget.pass!
                         ? IconButton(
                             splashRadius: 1,
-                            icon: Icon(Icons.visibility),
+                            icon: const Icon(Icons.visibility),
                             onPressed: () {
                               setState(() {});
                               if (widget.pass != null) {
@@ -63,7 +59,7 @@ class _DesignedTextFieldState extends State<DesignedTextField> {
                           )
                         : IconButton(
                             splashRadius: 1,
-                            icon: Icon(Icons.visibility_off),
+                            icon: const Icon(Icons.visibility_off),
                             onPressed: () {
                               setState(() {});
                               if (widget.pass != null) {
@@ -72,18 +68,19 @@ class _DesignedTextFieldState extends State<DesignedTextField> {
                             })
                     : Icon(widget.icon),
                 hintTextDirection: TextDirection.rtl,
-                labelStyle: TextStyle(textBaseline: TextBaseline.ideographic),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                border: OutlineInputBorder(
+                labelStyle:
+                    const TextStyle(textBaseline: TextBaseline.ideographic),
+                contentPadding: const EdgeInsets.symmetric(
+                    vertical: 10.0, horizontal: 20.0),
+                border: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(32.0)),
                 ),
-                enabledBorder: OutlineInputBorder(
+                enabledBorder: const OutlineInputBorder(
                   borderSide: BorderSide(
                       color: Color.fromARGB(255, 82, 80, 80), width: 1.0),
                   borderRadius: BorderRadius.all(Radius.circular(32.0)),
                 ),
-                focusedBorder: OutlineInputBorder(
+                focusedBorder: const OutlineInputBorder(
                   borderSide: BorderSide(
                       color: Color.fromARGB(255, 0, 255, 34), width: 2.0),
                   borderRadius: BorderRadius.all(Radius.circular(32.0)),
