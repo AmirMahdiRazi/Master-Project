@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:server/page_attendance/attendance_page.dart';
-import 'package:server/page_initalapp/intialapp_page.dart';
+import 'package:server/page_createcourse/createcourse.dart';
+import 'package:server/selectcourse/selectcourse.dart';
 
 import 'package:server/server/base.dart';
 import 'package:desktop_window/desktop_window.dart';
@@ -10,7 +11,7 @@ import 'package:desktop_window/desktop_window.dart';
 void main() async {
   Base server = Base();
 
-  server.server.path = Directory.current.parent.path;
+  server.server.path = Directory.current.path.replaceAll(RegExp(r'\\'), ('/'));
 
   runApp(const MyApp());
   checkDevice();
@@ -24,11 +25,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'ُServer دانشگاه سمنان',
-      theme: ThemeData.light(),
-      initialRoute: '/',
+      theme: ThemeData(
+        fontFamily: 'bnazanin',
+      ),
+      initialRoute: '/selcetCourse',
       routes: {
-        '/': (context) => const InitalApp(),
-        '/first': (context) => const Attend(),
+        '/selcetCourse': (context) => const SelectCourse(),
+        '/createCourse': (context) => const CreateCourse(),
       },
     );
   }
@@ -39,6 +42,6 @@ void checkDevice() async {
 }
 
 Future testWindowFunctions() async {
-  await DesktopWindow.setFullScreen(true);
-  await DesktopWindow.setMinWindowSize(const Size(1000, 800));
+  DesktopWindow.setWindowSize(const Size(1400, 950));
+  DesktopWindow.setMinWindowSize(const Size(1400, 950));
 }

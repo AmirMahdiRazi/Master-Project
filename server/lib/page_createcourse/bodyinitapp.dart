@@ -7,19 +7,18 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:server/animation/textkit.dart';
 
-import 'package:server/page_initalapp/Details.dart';
-import 'package:server/page_initalapp/table.dart';
+import 'package:server/page_createcourse/Details.dart';
+import 'package:server/page_createcourse/table.dart';
 
-class Body extends StatefulWidget {
-  const Body({super.key});
+class BodyInitApp extends StatefulWidget {
+  const BodyInitApp({super.key});
 
   @override
-  State<Body> createState() => _BodyState();
+  State<BodyInitApp> createState() => _BodyInitAppState();
 }
 
-class _BodyState extends State<Body> {
-  TextEditingController _textControllerFile = TextEditingController();
-  TextEditingController _textControllerCourse = TextEditingController();
+class _BodyInitAppState extends State<BodyInitApp> {
+  final TextEditingController _textControllerFile = TextEditingController();
   List<List<String>> listData = [];
   var fileExcelPath = '';
   @override
@@ -42,7 +41,7 @@ class _BodyState extends State<Body> {
                   ),
                 ),
               ),
-        listData.isNotEmpty ? Details(datas: listData) : SizedBox(),
+        listData.isNotEmpty ? Details(datas: listData) : const SizedBox(),
       ],
     );
   }
@@ -52,27 +51,24 @@ class _BodyState extends State<Body> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          color: Colors.white,
+          color: Colors.black,
           width: 700,
           height: 50,
           child: TextField(
             readOnly: true,
             controller: _textControllerFile,
-            style: const TextStyle(fontSize: 20),
+            style: const TextStyle(fontSize: 20, color: Colors.white),
             decoration: const InputDecoration(
                 border: InputBorder.none, contentPadding: EdgeInsets.all(10)),
           ),
         ),
-        FittedBox(
-          fit: BoxFit.cover,
-          child: Container(
-            child: IconButton(
-              color: Colors.white,
-              splashRadius: 1,
-              iconSize: 25,
-              onPressed: _pickerFile,
-              icon: const Icon(Icons.folder_open),
-            ),
+        Card(
+          elevation: 5,
+          child: IconButton(
+            color: Colors.black,
+            iconSize: 25,
+            onPressed: _pickerFile,
+            icon: const Icon(Icons.folder_open),
           ),
         )
       ],
@@ -122,8 +118,8 @@ class _BodyState extends State<Body> {
               style: TextStyle(fontFamily: 'bnazanin', fontSize: 20),
             ),
             Text(
-              "$fileExcelPath",
-              style: TextStyle(fontFamily: 'bnazanin', fontSize: 20),
+              fileExcelPath,
+              style: const TextStyle(fontFamily: 'bnazanin', fontSize: 20),
             ),
           ],
         ),

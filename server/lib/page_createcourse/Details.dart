@@ -6,8 +6,8 @@ import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 
 import 'package:server/animation/button.dart';
-import 'package:server/page_initalapp/coursename.dart';
-import 'package:server/page_initalapp/initalapptextfield.dart';
+import 'package:server/page_createcourse/coursename.dart';
+import 'package:server/page_createcourse/initalapptextfield.dart';
 import 'package:server/server/base.dart';
 
 class Details extends StatefulWidget {
@@ -62,7 +62,10 @@ class _DetailsState extends State<Details> {
         AbsorbPointer(
           absorbing: _isNotClickAble,
           child: DesignedAnimatedButton(
-            text: "Save",
+            borderRadius: 30,
+            width: 200,
+            height: 65,
+            text: "ذخیره",
             onPress: () async {
               int fName = int.parse(_textEditingControllerFName.text),
                   lName = int.parse(_textEditingControllerLName.text),
@@ -82,31 +85,34 @@ class _DetailsState extends State<Details> {
                         "0"
                       ])
                   .toList();
-              Excel excel = Excel.createExcel();
-              excel.rename("Sheet1", "bocksheet 1");
-              Sheet sheetObject = excel["bocksheet 1"];
-              index = 0;
-              temp
-                  .map((e) => sheetObject.insertRowIterables(e, index++))
-                  .toList();
-              for (int i = 0; i <= 32; i++) {
-                excel.copy("bocksheet 1", "bocksheet $i");
-              }
-
-              var fileBytes = excel.save();
-              try {
-                File(
-                    "${Base().server.path}/Datas/${_textControllerCourse.text}.xlsx")
-                  ..createSync(recursive: true)
-                  ..writeAsBytesSync(fileBytes!);
-              } catch (e) {
-                dialog();
-              }
+              writeOnExcel(temp);
             },
           ),
         )
       ],
     );
+  }
+
+  void writeOnExcel(List<List<String>> temp) {
+    Excel excel = Excel.createExcel();
+    excel.rename("Sheet1", "bocksheet 1");
+    Sheet sheetObject = excel["bocksheet 1"];
+    int index = 0;
+    temp.map((e) => sheetObject.insertRowIterables(e, index++)).toList();
+    for (int i = 0; i <= 32; i++) {
+      excel.copy("bocksheet 1", "bocksheet $i");
+    }
+
+    var fileBytes = excel.save();
+    String path = "${Base().server.path}/Datas/${_textControllerCourse.text}/";
+    try {
+      File("${path}/${_textControllerCourse.text}.xlsx")
+        ..createSync(recursive: true)
+        ..writeAsBytesSync(fileBytes!);
+      File('${path}/${_textControllerCourse.text}.txt').createSync();
+    } catch (e) {
+      dialog();
+    }
   }
 
   void checkerInput(String value) {
