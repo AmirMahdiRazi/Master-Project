@@ -14,8 +14,8 @@ class DesginedTable extends StatelessWidget {
         child: Container(
           decoration: const BoxDecoration(
               gradient: LinearGradient(colors: [
-            Color.fromARGB(255, 16, 124, 2),
-            Color.fromARGB(255, 0, 82, 107)
+            Color.fromARGB(255, 33, 228, 7),
+            Color.fromARGB(255, 4, 255, 234)
           ])),
           child: SingleChildScrollView(
             child: Table(

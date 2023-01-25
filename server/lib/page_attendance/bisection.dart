@@ -1,8 +1,7 @@
-
 import 'package:flutter/material.dart';
+import 'package:server/classes/courseandstudent.dart';
 
 import 'package:server/page_attendance/qrcode.dart';
-import 'package:server/temp.dart';
 
 class Bisection extends StatefulWidget {
   const Bisection({super.key});
@@ -16,6 +15,16 @@ class _BisectionState extends State<Bisection> {
   double padValue_right = 200, padValue_left = 0;
   late String code;
   int time = 0;
+  @override
+  void initState() {
+    Course().def = listPresentStudent;
+    super.initState();
+  }
+
+  Stream<List<Student>> get listPresentStudent async* {
+    yield Course().studentsPresent;
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,31 +34,44 @@ class _BisectionState extends State<Bisection> {
           padding: EdgeInsets.only(right: padValue_right, left: padValue_left),
           duration: const Duration(seconds: 2),
           curve: Curves.easeInOut,
-          child: ListView.builder(
-              itemCount: 50,
-              itemBuilder: ((context, index) {
-                return Card(
-                  semanticContainer: true,
-                  margin: const EdgeInsets.all(10),
-                  child: ListTile(
-                    title: SizedBox(
-                      height: 70,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text(
-                            data[index][0],
-                            style: const TextStyle(fontSize: 30),
+          child: StreamBuilder<List<Student>>(
+              stream: listPresentStudent,
+              builder: (context, snapshot) {
+                return ListView.builder(
+                    itemCount: Course().studentsPresent.length,
+                    itemBuilder: ((context, index) {
+                      return Card(
+                        semanticContainer: true,
+                        margin: const EdgeInsets.all(10),
+                        child: ListTile(
+                          title: SizedBox(
+                            height: 70,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                SizedBox(
+                                  width: 10,
+                                  child: FittedBox(
+                                    fit: BoxFit.fitWidth,
+                                    child: Text(
+                                      "${Course().studentsPresent[index].index}",
+                                      style: TextStyle(fontSize: 40),
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                    "${Course().studentsPresent[index].fName}"),
+                                Text(
+                                    "${Course().studentsPresent[index].lName}"),
+                                Text(
+                                    "${Course().studentsPresent[index].stdNumber}")
+                              ],
+                            ),
                           ),
-                          Text(data[index][3]),
-                          Text(data[index][1]),
-                          Text(data[index][2])
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              })),
+                        ),
+                      );
+                    }));
+              }),
         ),
         AnimatedPositioned(
           top: index == 0
@@ -73,7 +95,7 @@ class _BisectionState extends State<Bisection> {
               if (index == 3) {
                 index = -1;
               }
-              
+
               setState(() {
                 if (index == -1 || index == 0) {
                   padValue_right = 200;

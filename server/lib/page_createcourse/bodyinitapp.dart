@@ -5,7 +5,7 @@ import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
 
 import 'package:flutter/material.dart';
-import 'package:server/animation/textkit.dart';
+import 'package:server/widgets/textkit.dart';
 
 import 'package:server/page_createcourse/Details.dart';
 import 'package:server/page_createcourse/table.dart';
@@ -20,6 +20,7 @@ class BodyInitApp extends StatefulWidget {
 class _BodyInitAppState extends State<BodyInitApp> {
   final TextEditingController _textControllerFile = TextEditingController();
   List<List<String>> listData = [];
+  bool _isNotClickAble = false;
   var fileExcelPath = '';
   @override
   Widget build(BuildContext context) {
@@ -51,24 +52,30 @@ class _BodyInitAppState extends State<BodyInitApp> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          color: Colors.black,
+          color: Colors.black.withOpacity(.1),
           width: 700,
           height: 50,
-          child: TextField(
-            readOnly: true,
-            controller: _textControllerFile,
-            style: const TextStyle(fontSize: 20, color: Colors.white),
-            decoration: const InputDecoration(
-                border: InputBorder.none, contentPadding: EdgeInsets.all(10)),
+          child: Card(
+            child: TextField(
+              readOnly: true,
+              controller: _textControllerFile,
+              style: const TextStyle(fontSize: 20, color: Colors.grey),
+              decoration: const InputDecoration(
+                  border: InputBorder.none, contentPadding: EdgeInsets.all(10)),
+            ),
           ),
         ),
         Card(
           elevation: 5,
-          child: IconButton(
-            color: Colors.black,
-            iconSize: 25,
-            onPressed: _pickerFile,
-            icon: const Icon(Icons.folder_open),
+          child: AbsorbPointer(
+            absorbing: _isNotClickAble,
+            child: IconButton(
+              padding: const EdgeInsets.all(5.0),
+              color: Colors.black,
+              iconSize: 30,
+              onPressed: _pickerFile,
+              icon: const Icon(Icons.folder_open),
+            ),
           ),
         )
       ],
@@ -76,13 +83,17 @@ class _BodyInitAppState extends State<BodyInitApp> {
   }
 
   void _pickerFile() async {
+    setState(() {});
+    _isNotClickAble = true;
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.any,
       allowedExtensions: ['xlsx'],
     );
     if (result == null) return;
-    String file = result.files.single.path.toString();
     setState(() {});
+    _isNotClickAble = false;
+    String file = result.files.single.path.toString();
+
     _textControllerFile.text = file.toString();
 
     fileExcelPath = _textControllerFile.text;

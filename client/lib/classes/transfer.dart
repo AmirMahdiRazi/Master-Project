@@ -16,11 +16,9 @@ class TransferData {
 
   void transferDataWifi() async {
     try {
-      print('${client.ipServer}, ${client.port}');
       final socket = await Socket.connect(client.ipServer, client.port,
-          timeout: Duration(seconds: 3));
+          timeout: const Duration(seconds: 3));
 
-      print('44444');
       client.logs.add(
           "Connected to: ${socket.remoteAddress.address}:${socket.remotePort}");
 
@@ -30,16 +28,13 @@ class TransferData {
           client.logs.add("Response: $serverResponse");
           if (serverResponse.contains('{')) {
             var res = json.decode(serverResponse);
-            client.logs.add(
-                "Result = ${res["result"]} || discription = ${res["description"]}");
+            client.logs.add("Result = ${res["result"]}");
             client.result = {
               'result': res["result"],
-              "description": res["description"]
             };
-            if (client.result!["result"] == '200') {
-              socket.close();
-              PluginWifiConnect.disconnect();
-            }
+
+            socket.close();
+            PluginWifiConnect.disconnect();
           }
         },
         onError: (error) {
@@ -56,7 +51,7 @@ class TransferData {
       socket.close();
       client.result = null;
     } catch (e) {
-      client.result = {'result': '500', 'description': 'سرور در دسترس نیست'};
+      client.result = {'result': '600'};
 
       client.logs.add("can not find server");
     }

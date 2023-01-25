@@ -5,10 +5,10 @@ import 'dart:io';
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 
-import 'package:server/animation/button.dart';
+import 'package:server/widgets/button.dart';
 import 'package:server/page_createcourse/coursename.dart';
-import 'package:server/page_createcourse/initalapptextfield.dart';
-import 'package:server/server/base.dart';
+import 'package:server/widgets/TextandTextField.dart';
+import 'package:server/classes/base.dart';
 
 class Details extends StatefulWidget {
   Details({super.key, required this.datas});
@@ -49,15 +49,12 @@ class _DetailsState extends State<Details> {
                 txt: 'ستون شماره دانشجویی: ')
           ],
         ),
-        const SizedBox(
-          height: 50,
-        ),
         CourseName(
           function: checkerInput,
           textEditingController: _textControllerCourse,
         ),
         const SizedBox(
-          height: 50,
+          height: 10,
         ),
         AbsorbPointer(
           absorbing: _isNotClickAble,
@@ -93,24 +90,26 @@ class _DetailsState extends State<Details> {
     );
   }
 
-  void writeOnExcel(List<List<String>> temp) {
+  void writeOnExcel(List<List<String>> temp) async {
     Excel excel = Excel.createExcel();
-    excel.rename("Sheet1", "bocksheet 1");
-    Sheet sheetObject = excel["bocksheet 1"];
+    excel.rename("Sheet1", "booksheet 1");
+    Sheet sheetObject = excel["booksheet 1"];
     int index = 0;
     temp.map((e) => sheetObject.insertRowIterables(e, index++)).toList();
     for (int i = 0; i <= 32; i++) {
-      excel.copy("bocksheet 1", "bocksheet $i");
+      excel.copy("booksheet 1", "booksheet $i");
     }
 
     var fileBytes = excel.save();
-    String path = "${Base().server.path}/Datas/${_textControllerCourse.text}/";
+    String path = "${Base().path}/Datas/${_textControllerCourse.text}/";
     try {
       File("${path}/${_textControllerCourse.text}.xlsx")
         ..createSync(recursive: true)
         ..writeAsBytesSync(fileBytes!);
       File('${path}/${_textControllerCourse.text}.txt').createSync();
+      Navigator.popAndPushNamed(context, '/selcetCourse');
     } catch (e) {
+      await Future.delayed(Duration(milliseconds: 50));
       dialog();
     }
   }

@@ -2,6 +2,7 @@
 cmake_minimum_required(VERSION 3.14)
 project(server LANGUAGES CXX)
 
+
 # The name of the executable created for the application. Change this to change
 # the on-disk name of your application.
 set(BINARY_NAME "server")
@@ -28,6 +29,9 @@ set(CMAKE_EXE_LINKER_FLAGS_PROFILE "${CMAKE_EXE_LINKER_FLAGS_RELEASE}")
 set(CMAKE_SHARED_LINKER_FLAGS_PROFILE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE}")
 set(CMAKE_C_FLAGS_PROFILE "${CMAKE_C_FLAGS_RELEASE}")
 set(CMAKE_CXX_FLAGS_PROFILE "${CMAKE_CXX_FLAGS_RELEASE}")
+
+#
+set(CMAKE_GENERATOR_TOOLSET "ClangCL")
 
 # Use Unicode for all projects.
 add_definitions(-DUNICODE -D_UNICODE)

@@ -5,7 +5,6 @@ import 'package:client/pages/qrcodescanner.dart';
 import 'package:client/pages/success.dart';
 import 'package:client/pages/wifi_connection.dart';
 
-
 import 'package:flutter/material.dart';
 
 void main() {

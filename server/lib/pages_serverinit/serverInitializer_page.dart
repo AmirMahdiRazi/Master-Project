@@ -1,18 +1,9 @@
-import 'dart:async';
-import 'dart:io';
-import 'dart:math';
-
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
-
 import 'package:flutter/material.dart';
-
 import 'package:network_info_plus/network_info_plus.dart';
-
 import 'package:server/pages_serverinit/hotspotsection.dart';
 import 'package:server/pages_serverinit/wifisection.dart';
-
-import 'package:server/server/base.dart';
-
+import 'package:server/classes/server.dart';
 import '../constrant.dart';
 
 class ServerInit extends StatefulWidget {
@@ -29,13 +20,11 @@ class _ServerInitState extends State<ServerInit> {
   TextEditingController textControllerPasswordWifi = TextEditingController();
   TextEditingController textControllerSSIDHot = TextEditingController();
   TextEditingController textControllerPassHot = TextEditingController();
-  Future<Status> state = Base().server.checkWifi();
+  Future<StatusConnection> state = Server().checkWifi();
   final info = NetworkInfo();
-  _Stauts _stauts = _Stauts.hotspot;
   bool positive = true;
   @override
   void initState() {
-    // checker();
     super.initState();
   }
 
@@ -73,15 +62,17 @@ class _ServerInitState extends State<ServerInit> {
             onChanged: (b) async {
               checker();
 
-              await Future.delayed(Duration(seconds: 1));
+              await Future.delayed(const Duration(seconds: 1));
               setState(() {
-                positive =
-                    Base().server.connection == Status.hotspot ? true : false;
+                positive = Server().connection == StatusConnection.hotspot
+                    ? true
+                    : false;
               });
             },
             colorBuilder: (b) => b ? Colors.red : Colors.green,
-            iconBuilder: (value) =>
-                value ? Icon(Icons.wifi) : Icon(Icons.wifi_tethering),
+            iconBuilder: (value) => value
+                ? const Icon(Icons.wifi)
+                : const Icon(Icons.wifi_tethering),
             textBuilder: (value) => value
                 ? const Center(
                     child: Text(
@@ -95,7 +86,7 @@ class _ServerInitState extends State<ServerInit> {
         ],
       ),
       body: Center(
-        child: FutureBuilder<Status>(
+        child: FutureBuilder<StatusConnection>(
             future: state,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
@@ -118,6 +109,6 @@ class _ServerInitState extends State<ServerInit> {
   }
 
   Future<void> checker() async {
-    await Base().server.checkWifi();
+    await Server().checkWifi();
   }
 }

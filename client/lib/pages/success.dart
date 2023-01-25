@@ -37,7 +37,7 @@ class _BodyState extends State<Body> {
               Lottie.asset('assets/tagalong-pro-success.json', repeat: false),
         ),
         Text(
-          '${TransferData().client.result!["result"]} : توضیحات',
+          '${TransferData().client.result!["result"]}',
           textAlign: TextAlign.right,
           style: GoogleFonts.lato(
             textStyle: Theme.of(context).textTheme.headline4,
@@ -48,7 +48,8 @@ class _BodyState extends State<Body> {
           ),
         ),
         Text(
-          '${TransferData().client.result!["description"]} : توضیحات',
+          'حاضری شما زده شد.',
+          textDirection: TextDirection.rtl,
           textAlign: TextAlign.right,
           style: GoogleFonts.lato(
             textStyle: Theme.of(context).textTheme.headline4,

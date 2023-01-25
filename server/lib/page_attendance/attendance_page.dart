@@ -1,19 +1,43 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
-import 'package:server/server/base.dart';
+
+import 'package:server/classes/server.dart';
+import 'package:server/constrant.dart';
 
 import 'bisection.dart';
 
-class Attend extends StatefulWidget {
-  const Attend({super.key});
+class Attendance extends StatefulWidget {
+  const Attendance({super.key});
 
   @override
-  State<Attend> createState() => _AttendState();
+  State<Attendance> createState() => _AttendanceState();
 }
 
-class _AttendState extends State<Attend> {
+class _AttendanceState extends State<Attendance> {
   bool positive = true;
+
+  @override
+  void initState() {
+    Timer.periodic(const Duration(seconds: 10), (timer) {
+      if (Server().serverstatus == ServerStatuses.teminate) {
+        setState(() {
+          positive = true;
+        });
+        dialog();
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    if (Server().running) Server().stopManual();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,10 +62,10 @@ class _AttendState extends State<Attend> {
               ),
             ],
             onChanged: (b) async {
-              Base().server.startOrStop();
+              Server().startOrStop();
               await Future.delayed(const Duration(seconds: 1));
               setState(() {
-                positive = !Base().server.running;
+                positive = !Server().running;
               });
             },
             colorBuilder: (b) => b ? Colors.red : Colors.green,
@@ -96,6 +120,63 @@ class _AttendState extends State<Attend> {
       ),
       backgroundColor: const Color.fromARGB(255, 103, 3, 233),
       body: const Bisection(),
+    );
+  }
+
+  Future dialog() {
+    return showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text(
+          "خطا",
+          style: TextStyle(fontFamily: 'bnazanin', fontSize: 20),
+          textAlign: TextAlign.right,
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              "IP سرور دچار مشکل شده است لطفا IP را بررسی کنید.",
+              textDirection: TextDirection.rtl,
+              textAlign: TextAlign.right,
+              style: TextStyle(fontFamily: 'bnazanin', fontSize: 20),
+            ),
+            Text(
+              Server().ip,
+              textDirection: TextDirection.rtl,
+              textAlign: TextAlign.right,
+              style: const TextStyle(fontFamily: 'bnazanin', fontSize: 25),
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+            child: Container(
+              padding: const EdgeInsets.all(14),
+              child: const Text(
+                "باشه",
+                style: TextStyle(fontFamily: 'bnazanin', fontSize: 25),
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.popUntil(context, ModalRoute.withName('/SelcetIP'));
+            },
+            child: Container(
+              padding: const EdgeInsets.all(14),
+              child: const Text(
+                textDirection: TextDirection.rtl,
+                "برو به صفحه انتخاب IP",
+                style: TextStyle(fontFamily: 'bnazanin', fontSize: 25),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

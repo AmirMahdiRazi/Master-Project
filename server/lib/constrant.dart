@@ -1,3 +1,3 @@
+enum ServerStatuses { normal, teminate }
 
-
-enum Status { wifi, hotspot }
+enum StatusConnection { wifi, hotspot }

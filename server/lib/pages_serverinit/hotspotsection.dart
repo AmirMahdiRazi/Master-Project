@@ -3,9 +3,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:network_info_plus/network_info_plus.dart';
-import 'package:server/animation/button.dart';
+import 'package:server/constrant.dart';
+import 'package:server/widgets/button.dart';
 import 'package:server/pages_serverinit/textfield.dart';
-import 'package:server/server/base.dart';
+import 'package:server/classes/base.dart';
+import 'package:server/classes/server.dart';
 
 class HotspotPage extends StatefulWidget {
   HotspotPage({
@@ -32,7 +34,7 @@ class _HotspotPageState extends State<HotspotPage> {
   @override
   void initState() {
     _stop = false;
-    Timer.periodic(Duration(seconds: 1), ((timer) {
+    Timer.periodic(const Duration(seconds: 1), ((timer) {
       if (_stop) {
         timer.cancel();
       }
@@ -92,7 +94,7 @@ class _HotspotPageState extends State<HotspotPage> {
                 ),
                 Column(
                   children: [
-                    Text(
+                    const Text(
                       "IP در دسترس",
                       textDirection: TextDirection.rtl,
                       style: TextStyle(
@@ -100,7 +102,7 @@ class _HotspotPageState extends State<HotspotPage> {
                           fontSize: 25,
                           fontWeight: FontWeight.w700),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
                     Column(
@@ -111,26 +113,33 @@ class _HotspotPageState extends State<HotspotPage> {
                                 absorbing: isClickable,
                                 child: Container(
                                   height: 100,
-                                  child: DesignedAnimatedButton(
-                                      borderRadius: 30,
-                                      height: 80,
-                                      text: e,
-                                      width: 500,
-                                      onPress: () {
-                                        Base().server.pass =
-                                            widget.textControllerPassHot.text;
-                                        Base().server.user =
-                                            widget.textControllerSSIDHot.text;
-                                        Base().server.ip = e.split(": ")[1];
-                                        Base()
-                                            .server
-                                            .getUnusedPort(e.split(": ")[1]);
-                                        Future.delayed(
-                                            Duration(milliseconds: 505), () {
-                                          Navigator.pushNamed(
-                                              context, '/first');
-                                        });
-                                      }),
+                                  child: FittedBox(
+                                    fit: BoxFit.fitWidth,
+                                    child: DesignedAnimatedButton(
+                                        duration: 2000,
+                                        borderRadius: 30,
+                                        height: 80,
+                                        text: e,
+                                        width: 500,
+                                        onPress: () {
+                                          Server().pass =
+                                              widget.textControllerPassHot.text;
+                                          Server().user =
+                                              widget.textControllerSSIDHot.text;
+                                          Server().ip = e.split(": ")[1];
+
+                                          Server()
+                                              .getUnusedPort(e.split(": ")[1]);
+                                          Future.delayed(
+                                              const Duration(milliseconds: 505),
+                                              () {
+                                            // Server().serverstatus =
+                                            //     ServerStatuses.normal;
+                                            // Navigator.pushNamed(
+                                            //     context, '/Attendance');
+                                          });
+                                        }),
+                                  ),
                                 ),
                               ),
                             )
@@ -143,15 +152,15 @@ class _HotspotPageState extends State<HotspotPage> {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   "لطفا hotspot را روشن کنید.",
                   textDirection: TextDirection.rtl,
                   style: TextStyle(fontFamily: "bnazanin", fontSize: 30),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 50,
                 ),
-                CircularProgressIndicator(),
+                const CircularProgressIndicator(),
               ],
             );
           }

@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:network_info_plus/network_info_plus.dart';
-import 'package:server/animation/button.dart';
+import 'package:server/constrant.dart';
+import 'package:server/widgets/button.dart';
 import 'package:server/pages_serverinit/textfield.dart';
-import 'package:server/server/base.dart';
+import 'package:server/classes/base.dart';
+import 'package:server/classes/server.dart';
 
 // ignore: must_be_immutable
 class WifiPage extends StatefulWidget {
@@ -51,10 +53,12 @@ class _WifiPageState extends State<WifiPage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
-                  "اسم Wifi: $wifiName",
-                  textDirection: TextDirection.rtl,
+                  "WifiName: $wifiName",
+                  textDirection: TextDirection.ltr,
                   style: const TextStyle(
-                      fontSize: 25, fontWeight: FontWeight.w600),
+                      fontSize: 45,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'sofia'),
                 ),
                 DesignedTextField(
                   name: 'پسورد(Password)',
@@ -74,16 +78,20 @@ class _WifiPageState extends State<WifiPage> {
                 AbsorbPointer(
                   absorbing: isNotClickable,
                   child: DesignedAnimatedButton(
+                      fontFamily: '',
+                      fSize: 40,
                       borderRadius: 30,
                       text: wifiIP ?? "error",
                       width: 300,
+                      height: 100,
                       onPress: () {
-                        Base().server.pass = widget.textControllerPassword.text;
-                        Base().server.user = wifiName!;
-                        Base().server.ip = wifiIP!;
-                        Base().server.getUnusedPort(wifiIP!);
+                        Server().pass = widget.textControllerPassword.text;
+                        Server().user = wifiName!;
+                        Server().ip = wifiIP!;
+                        Server().getUnusedPort(wifiIP!);
                         Future.delayed(const Duration(milliseconds: 505), () {
-                          Navigator.pushNamed(context, '/first');
+                          Server().serverstatus = ServerStatuses.normal;
+                          Navigator.pushNamed(context, '/Attendance');
                         });
                       }),
                 )

@@ -15,14 +15,6 @@ class _CourseNameState extends State<CourseName> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text(
-          "نام درس:",
-          style: TextStyle(
-              color: Colors.black, fontFamily: "bnazanin", fontSize: 30),
-        ),
-        const SizedBox(
-          width: 10,
-        ),
         Container(
           width: 300,
           child: Padding(
@@ -30,12 +22,15 @@ class _CourseNameState extends State<CourseName> {
             child: Card(
               elevation: 10,
               child: TextField(
+                textInputAction: TextInputAction.next,
+                textAlign: TextAlign.right,
+                textDirection: TextDirection.rtl,
                 onChanged: widget.function,
                 controller: widget.textEditingController,
                 style: const TextStyle(fontSize: 28, color: Colors.black),
                 decoration: const InputDecoration(
                   contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
                   border: OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
@@ -49,6 +44,12 @@ class _CourseNameState extends State<CourseName> {
               ),
             ),
           ),
+        ),
+        const Text(
+          textDirection: TextDirection.rtl,
+          "نام درس:",
+          style: TextStyle(
+              color: Colors.black, fontFamily: "bnazanin", fontSize: 30),
         ),
       ],
     );

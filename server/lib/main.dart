@@ -1,36 +1,43 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:server/classes/courseandstudent.dart';
 import 'package:server/page_attendance/attendance_page.dart';
-import 'package:server/page_createcourse/createcourse.dart';
-import 'package:server/selectcourse/selectcourse.dart';
 
-import 'package:server/server/base.dart';
+import 'package:server/page_createcourse/createcourse_page.dart';
+import 'package:server/pages_serverinit/serverInitializer_page.dart';
+import 'package:server/page_selectcourse/selectcourse_page.dart';
+
+import 'package:server/classes/base.dart';
 import 'package:desktop_window/desktop_window.dart';
 
 void main() async {
-  Base server = Base();
+  Base().path = Directory.current.path.replaceAll(RegExp(r'\\'), ('/'));
+  WidgetsFlutterBinding.ensureInitialized();
 
-  server.server.path = Directory.current.path.replaceAll(RegExp(r'\\'), ('/'));
-
-  runApp(const MyApp());
   checkDevice();
+  runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'ُServer دانشگاه سمنان',
-      theme: ThemeData(
-        fontFamily: 'bnazanin',
-      ),
+      theme: ThemeData(fontFamily: 'bnazanin'),
       initialRoute: '/selcetCourse',
       routes: {
         '/selcetCourse': (context) => const SelectCourse(),
+        '/SelectIP': (context) => const ServerInit(),
+        '/Attendance': (context) => const Attendance(),
         '/createCourse': (context) => const CreateCourse(),
       },
     );
@@ -42,6 +49,6 @@ void checkDevice() async {
 }
 
 Future testWindowFunctions() async {
-  DesktopWindow.setWindowSize(const Size(1400, 950));
-  DesktopWindow.setMinWindowSize(const Size(1400, 950));
+  await DesktopWindow.setWindowSize(Size(1400, 800));
+  await DesktopWindow.setMinWindowSize(Size(1400, 800));
 }

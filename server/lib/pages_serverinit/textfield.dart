@@ -40,7 +40,6 @@ class _DesignedTextFieldState extends State<DesignedTextField> {
               obscureText: widget.pass ?? false,
               textAlign: TextAlign.center,
               controller: widget.textEditingController,
-              textDirection: TextDirection.rtl,
               maxLines: 1,
               textInputAction: TextInputAction.next,
               decoration: InputDecoration(

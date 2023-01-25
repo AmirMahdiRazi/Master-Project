@@ -36,13 +36,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.9.0"
-  auto_size_widget:
-    dependency: "direct main"
-    description:
-      name: auto_size_widget
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.4"
   boolean_selector:
     dependency: transitive
     description:
@@ -177,13 +170,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  get:
-    dependency: "direct main"
-    description:
-      name: get
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.6.5"
   js:
     dependency: transitive
     description:
@@ -198,6 +184,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  lottie:
+    dependency: "direct main"
+    description:
+      name: lottie
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.0"
   matcher:
     dependency: transitive
     description:
@@ -359,4 +352,4 @@ packages:
     version: "6.1.0"
 sdks:
   dart: ">=2.18.4 <3.0.0"
-  flutter: ">=2.11.0"
+  flutter: ">=3.3.0"

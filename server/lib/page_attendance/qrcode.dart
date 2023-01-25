@@ -3,7 +3,8 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:server/server/base.dart';
+
+import 'package:server/classes/server.dart';
 
 // ignore: must_be_immutable
 class QRGenearator extends StatefulWidget {
@@ -21,10 +22,15 @@ class _QRGenearatorState extends State<QRGenearator> {
   Random random = Random();
   @override
   void initState() {
-    Base().server.ipConvert();
+    Server().code = random.nextInt(9999).toString();
+    print(Server().code);
+    Server().ipConvert();
+    print(Server().port);
     _stop = false;
-    Timer.periodic(const Duration(seconds: 30), (t) {
-      Base().server.code = random.nextInt(9999).toString();
+    Timer.periodic(const Duration(hours: 1), (t) {
+      Server().code = random.nextInt(9999).toString();
+      print(
+          '${Server().user}-${Server().pass}-${Server().ipConvert()}-${Server().port}-${Server().code}');
       if (_stop) {
         t.cancel();
       }
@@ -47,7 +53,7 @@ class _QRGenearatorState extends State<QRGenearator> {
           child: QrImage(
             size: widget.size.toDouble(),
             data:
-                '${Base().server.user}-${Base().server.pass}-${Base().server.ip}-${Base().server.port}-${Base().server.code}',
+                '${Server().user}-${Server().pass}-${Server().ipConvert()}-${Server().port}-${Server().code}',
             backgroundColor: Colors.white,
           ),
         ),

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'dart:io';
 
@@ -74,7 +76,7 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
   }
 
   Widget buildControlButtons() => Container(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           color: Colors.white24,
@@ -109,7 +111,7 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
                   future: controller?.getCameraInfo(),
                   builder: (context, snapshot) {
                     if (snapshot.data != null) {
-                      return Icon(Icons.switch_camera);
+                      return const Icon(Icons.switch_camera);
                     } else {
                       return Container();
                     }
@@ -121,7 +123,7 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
                 onPressed: () {
                   controller!.resumeCamera();
                 },
-                icon: Icon(Icons.play_arrow_outlined),
+                icon: const Icon(Icons.play_arrow_outlined),
               ),
             )
           ],
@@ -129,7 +131,7 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
       );
   Widget buildResult() => Container(
         height: 100,
-        padding: EdgeInsets.all(12),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           color: Colors.white24,
@@ -153,15 +155,15 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
       controller.scannedDataStream.listen(
         (barcode) => setState(
           (() {
-            if (barcode.code != null && barcode.code!.length >= 0) {
+            print(barcode.code!.toString());
+            if (barcode.code != null &&
+                barcode.code!.toString().split('-').length == 5) {
               controller.pauseCamera();
 
               PluginWifiConnect.disconnect();
 
               List<String> data = data_extraction(barcode.code!);
 
-              // ** mahdi-123456789-c0:a8:1:64-3000-r542un 1.100
-              // ** reza-123456789-c0:a8:89:1-3000-rz542un 137.1
               TransferData().client.ipServer = data[2];
               TransferData().client.port = int.parse(data[3]);
               TransferData().client.code = data[4];
@@ -183,14 +185,14 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
   }
 
   void _getAndroidId() async {
-    var _androidIdPlugin = AndroidId();
+    var _androidIdPlugin = const AndroidId();
     TransferData().client.ID = (await _androidIdPlugin.getId())!;
   }
 
   List<String> data_extraction(String data) {
     List<String> list, liIp = [];
     list = data.split('-');
-    liIp = list[2].split(':');
+    liIp = list[2].split('.');
 
     for (int i = 0; i < liIp.length; i++) {
       liIp[i] = int.parse(liIp[i], radix: 16).toString();
@@ -232,9 +234,7 @@ class _DialogState extends State<Dialog> {
   }
 
   Stream<_Status> getStream() async* {
-    int i = 0;
-
-    await Future.delayed(Duration(seconds: 5));
+    await Future.delayed(const Duration(seconds: 10));
     if (TransferData().client.result != null) {
       if (TransferData().client.result!["result"] == '200') {
         Navigator.of(context).pop();
@@ -243,13 +243,31 @@ class _DialogState extends State<Dialog> {
       } else if (TransferData().client.result!["result"] != '200') {
         setState(() {
           _result = TransferData().client.result!["result"];
-          _description = TransferData().client.result!["description"];
+          switch (TransferData().client.result!["result"]) {
+            case '100': // ! Code Expaier
+              _description = 'کد منقظی شده است.';
+              break;
+            case '300': // ! Student is in List students and present
+              _description = 'حاضری شما قبلا زده شده است.';
+              break;
+            case '400': // ! Student Number Not Found
+              _description = 'شماره دانشجویی شما یافت نشد.';
+              break;
+            case '500': // ! Can Not Write on Excel File
+              _description =
+                  ' مشکلی پیش آمده(لطفا به استاذ بگویید فایل را ببندند.) و دوباره تلاش کنید.';
+              break;
+            default:
+              {
+                _description = 'سرور در دسترس نیست';
+              }
+              break;
+          }
           TransferData().client.result = null;
         });
         yield _Status.serverOffline;
       } else {
         setState(() {
-          _result = 'مشکلی پیش آمده است';
           _description = 'لطفا دوباره تلاش کنید';
         });
         yield _Status.waited;
@@ -264,10 +282,10 @@ class _DialogState extends State<Dialog> {
         builder: (context, snapshot) {
           return AlertDialog(
             title: _result == null
-                ? Center(child: CircularProgressIndicator())
+                ? const Center(child: CircularProgressIndicator())
                 : null,
             content: _result == null
-                ? Text(
+                ? const Text(
                     'لطفا صبر کنید',
                     textAlign: TextAlign.center,
                     textDirection: TextDirection.rtl,
@@ -275,8 +293,10 @@ class _DialogState extends State<Dialog> {
                 : Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('${_result}'),
-                      Text('${_description}'),
+                      Text(
+                        '${_description}',
+                        textDirection: TextDirection.ltr,
+                      ),
                     ],
                   ),
             actions: _result == null
@@ -289,7 +309,7 @@ class _DialogState extends State<Dialog> {
                         widget.controller.resumeCamera();
                         Navigator.of(context).pop();
                       },
-                      child: Text(
+                      child: const Text(
                         'متوجه شدم',
                         textDirection: TextDirection.rtl,
                         textAlign: TextAlign.left,
