@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:server/classes/courseandstudent.dart';
+import 'package:server/constrant.dart';
 
 import 'package:server/page_attendance/qrcode.dart';
 
@@ -44,28 +45,48 @@ class _BisectionState extends State<Bisection> {
                         semanticContainer: true,
                         margin: const EdgeInsets.all(10),
                         child: ListTile(
-                          title: SizedBox(
-                            height: 70,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                SizedBox(
-                                  width: 10,
-                                  child: FittedBox(
-                                    fit: BoxFit.fitWidth,
-                                    child: Text(
-                                      "${Course().studentsPresent[index].index}",
-                                      style: TextStyle(fontSize: 40),
-                                    ),
+                          title: ListTile(
+                            leading: CircleAvatar(
+                              child: Text(
+                                Course().studentsPresent[index].index,
+                                style: kstyleNumber,
+                              ),
+                            ),
+                            title: Text(
+                              '${Course().studentsPresent[index].fName} ${Course().studentsPresent[index].lName}',
+                              style: TextStyle(fontSize: 25),
+                            ),
+                            trailing: FittedBox(
+                              fit: BoxFit.contain,
+                              child: Row(
+                                children: [
+                                  Text(
+                                    Course().studentsPresent[index].stdNumber,
+                                    style: kstyleNumber,
                                   ),
-                                ),
-                                Text(
-                                    "${Course().studentsPresent[index].fName}"),
-                                Text(
-                                    "${Course().studentsPresent[index].lName}"),
-                                Text(
-                                    "${Course().studentsPresent[index].stdNumber}")
-                              ],
+                                  const SizedBox(
+                                    width: 50,
+                                  ),
+                                  Text(
+                                    Course().studentsPresent[index].time!,
+                                    style: kstyleNumber,
+                                  ),
+                                  const SizedBox(
+                                    width: 50,
+                                  ),
+                                  Text(
+                                    Course().studentsPresent[index].day!,
+                                    style: kstyleNumber,
+                                  ),
+                                  const SizedBox(
+                                    width: 50,
+                                  ),
+                                  Text(
+                                    Course().studentsPresent[index].date!,
+                                    style: kstyleNumber,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),

@@ -59,7 +59,7 @@ class Server {
       running = true;
       _runCheker = true;
 
-      _checkServer();
+      // _checkServer();
       logs.add("Server is running on : $ip:$port");
       _serverSocket!.listen((Socket event) {
         handleConnection(event);
@@ -90,35 +90,51 @@ class Server {
         _clients.add(client);
         if (message.split('-').length == 3) {
           List temp = message.split('-');
-          String ID = temp[0];
+          String id = temp[0];
           String codeClient = temp[1];
           String studentNumber = temp[2];
-          print(studentNumber);
           if (codeClient != code) {
-            result = '{"result": "100"}'; // ! Code Expaier
+            result = '{"result": "100"}'; // ?? Code Expaier
 
           } else {
             for (int i = 0; i < Course().students.length; i++) {
               if (Course().students[i].stdNumber == studentNumber) {
                 if (Course().students[i].statusPresent == '0') {
-                  if (Course().updateExcel(i)) {
-                    Course().students[i].statusPresent = '1';
-                    Course().studentsPresent.add(Course().students[i]);
-                    result =
-                        '{"result": "200"}'; // ! Student is in List students and not present
+                  bool exsistId = Course()
+                      .studentsPresent
+                      .map((e) => e.id!.contains(id))
+                      .any((element) => element == true);
+                  if (!exsistId || Course().studentsPresent.isEmpty) {
+                    if (Course().updateExcel(i, id)) {
+                      Course().students[i].statusPresent = '1';
+                      DateTime now = DateTime.now();
+                      Course().students[i].time =
+                          '${now.hour}:${now.minute}:${now.second}';
+                      Course().students[i].day = now.day.toString();
+                      Course().students[i].date =
+                          "${now.year}/${now.month}/${now.day}";
+                      Course().students[i].id = id;
+
+                      Course().studentsPresent.insert(0, Course().students[i]);
+                      result =
+                          '{"result": "200"}'; // ?? Student is in List students and not present
+                    } else {
+                      result =
+                          '{"result":"500"}'; // ?? Can Not Write on Excel File
+                    }
                   } else {
-                    result =
-                        '{"result":"500"}'; // ! Can Not Write on Excel File
+                    result = '{"result": "600"}'; // ?? duplicate ID
                   }
+                  ;
                 } else {
                   result =
-                      '{"result": "300"}'; // ! Student is in List students and present
+                      '{"result": "300"}'; // ?? Student is in List students and present
                 }
                 break;
               }
             }
             if (result.isEmpty) {
-              result = '{"result": "400"}'; // ! Student Number Not Found
+              result = '{"result": "400"}'; // ?? Student Number Not Found
             }
             client.write(result);
           }
@@ -159,13 +175,12 @@ class Server {
   }
 
   void getUnusedPort(String address) async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
     int portUnused = await ServerSocket.bind(address, 0).then((socket) {
       var portUnused = socket.port;
       socket.close();
       return portUnused;
     });
     port = portUnused;
-    print('done');
   }
 }

@@ -28,7 +28,7 @@ class _HotspotPageState extends State<HotspotPage> {
 
   String ethernet = '';
   List<String> listIPS = [];
-  bool isClickable = true;
+  bool isNotClickable = true;
   late bool _stop;
 
   @override
@@ -70,9 +70,9 @@ class _HotspotPageState extends State<HotspotPage> {
                     setState(() {});
                     if (widget.textControllerPassHot.text.isEmpty ||
                         widget.textControllerSSIDHot.text.isEmpty) {
-                      isClickable = true;
+                      isNotClickable = true;
                     } else {
-                      isClickable = false;
+                      isNotClickable = false;
                     }
                   },
                 ),
@@ -86,9 +86,9 @@ class _HotspotPageState extends State<HotspotPage> {
                     setState(() {});
                     if (widget.textControllerPassHot.text.isEmpty ||
                         widget.textControllerSSIDHot.text.isEmpty) {
-                      isClickable = true;
+                      isNotClickable = true;
                     } else {
-                      isClickable = false;
+                      isNotClickable = false;
                     }
                   },
                 ),
@@ -110,8 +110,8 @@ class _HotspotPageState extends State<HotspotPage> {
                         children: listIPS
                             .map(
                               (e) => AbsorbPointer(
-                                absorbing: isClickable,
-                                child: Container(
+                                absorbing: isNotClickable,
+                                child: SizedBox(
                                   height: 100,
                                   child: FittedBox(
                                     fit: BoxFit.fitWidth,
@@ -122,6 +122,8 @@ class _HotspotPageState extends State<HotspotPage> {
                                         text: e,
                                         width: 500,
                                         onPress: () {
+                                          setState(() {});
+                                          isNotClickable = true;
                                           Server().pass =
                                               widget.textControllerPassHot.text;
                                           Server().user =
@@ -131,12 +133,13 @@ class _HotspotPageState extends State<HotspotPage> {
                                           Server()
                                               .getUnusedPort(e.split(": ")[1]);
                                           Future.delayed(
-                                              const Duration(milliseconds: 505),
-                                              () {
-                                            // Server().serverstatus =
-                                            //     ServerStatuses.normal;
-                                            // Navigator.pushNamed(
-                                            //     context, '/Attendance');
+                                              const Duration(seconds: 2), () {
+                                            Server().serverstatus =
+                                                ServerStatuses.normal;
+                                            setState(() {});
+                                            isNotClickable = false;
+                                            Navigator.pushNamed(
+                                                context, '/Attendance');
                                           });
                                         }),
                                   ),

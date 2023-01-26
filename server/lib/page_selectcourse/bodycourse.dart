@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -38,7 +40,7 @@ class _BodyCourseState extends State<BodyCourse> {
         children: [
           SizedBox(
             width: 800,
-            height: 500,
+            height: 550,
             child: Card(
               elevation: 7,
               child: Base().page
@@ -78,25 +80,24 @@ class _BodyCourseState extends State<BodyCourse> {
       List<String> li1 = dir.listSync().map((e) => e.path).toList();
       for (var _ in li1) {
         String temp = _.replaceFirst('${dir.path}\\', '');
-        print(temp);
+
         List _listFile = Directory(_)
             .listSync()
             .toList()
-            .map((e) => e.path.replaceFirst(_ + '\\', ''))
+            .map((e) => e.path.replaceFirst('$_\\', ''))
             .toList();
 
-        if (_listFile.contains(temp + '.txt') &&
-            _listFile.contains(temp + '.xlsx')) {
+        if (_listFile.contains('$temp.txt') &&
+            _listFile.contains('$temp.xlsx')) {
           courses.add(_.replaceFirst('${dir.path}\\', ''));
         }
       }
     } else {
       courses = [];
-      await Future.delayed(Duration(milliseconds: 50));
     }
     if (courses.isEmpty) {
       await Future.delayed(
-        Duration(milliseconds: 50),
+        const Duration(milliseconds: 50),
       );
       dialog();
     }
@@ -107,16 +108,19 @@ class _BodyCourseState extends State<BodyCourse> {
       barrierDismissible: false,
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text(
+        title: Text(
           "خطا",
           textAlign: TextAlign.right,
+          style: TextStyle(fontSize: 25, color: Colors.red.shade300),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
+          // ignore: prefer_const_literals_to_create_immutables
           children: [
             const Text(
-              "درس حدید ثبت کنید.درسی ثبت نشده است.",
+              "درس جدید ثبت کنید.درسی ثبت نشده است.",
               textDirection: TextDirection.rtl,
+              style: TextStyle(fontSize: 25),
             ),
           ],
         ),
@@ -130,6 +134,7 @@ class _BodyCourseState extends State<BodyCourse> {
               padding: const EdgeInsets.all(14),
               child: const Text(
                 "باشه",
+                style: TextStyle(fontSize: 25),
               ),
             ),
           ),

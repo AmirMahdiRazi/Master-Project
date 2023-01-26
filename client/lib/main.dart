@@ -1,10 +1,12 @@
+import 'dart:io';
+
 import 'package:client/classes/Transfer.dart';
 import 'package:client/pages/connection.dart';
 import 'package:client/pages/info_page.dart';
 import 'package:client/pages/qrcodescanner.dart';
 import 'package:client/pages/success.dart';
 import 'package:client/pages/wifi_connection.dart';
-
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -29,5 +31,16 @@ class MyApp extends StatelessWidget {
         '/second': (context) => Success(),
       },
     );
+  }
+}
+
+Future<String?> _getId() async {
+  var deviceInfo = DeviceInfoPlugin();
+  if (Platform.isIOS) {
+    var iosDeviceInfo = await deviceInfo.iosInfo;
+    return iosDeviceInfo.identifierForVendor; // unique ID on iOS
+  } else if (Platform.isAndroid) {
+    var androidDeviceInfo = await deviceInfo.androidInfo;
+    return androidDeviceInfo.id; // unique ID on Android
   }
 }

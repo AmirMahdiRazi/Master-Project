@@ -1,13 +1,9 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:server/classes/courseandstudent.dart';
 import 'package:server/page_attendance/attendance_page.dart';
-
 import 'package:server/page_createcourse/createcourse_page.dart';
 import 'package:server/pages_serverinit/serverInitializer_page.dart';
 import 'package:server/page_selectcourse/selectcourse_page.dart';
-
 import 'package:server/classes/base.dart';
 import 'package:desktop_window/desktop_window.dart';
 
@@ -49,6 +45,6 @@ void checkDevice() async {
 }
 
 Future testWindowFunctions() async {
-  await DesktopWindow.setWindowSize(Size(1400, 800));
-  await DesktopWindow.setMinWindowSize(Size(1400, 800));
+  await DesktopWindow.setWindowSize(Size(1500, 900));
+  await DesktopWindow.setMinWindowSize(Size(1500, 900));
 }

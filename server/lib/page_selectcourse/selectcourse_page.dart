@@ -28,7 +28,7 @@ class SelectCourse extends StatelessWidget {
         ),
         backgroundColor: Colors.transparent,
       ),
-      body: BodyCourse(),
+      body: const BodyCourse(),
     );
   }
 }

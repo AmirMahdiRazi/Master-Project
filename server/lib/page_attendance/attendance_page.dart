@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
+import 'package:server/classes/courseandstudent.dart';
 
 import 'package:server/classes/server.dart';
 import 'package:server/constrant.dart';
@@ -42,6 +43,17 @@ class _AttendanceState extends State<Attendance> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Text("نام درس:${Course().courseName}"),
+            Text("جلسه:${Course().numberMeeting}"),
+            Text(
+              "IP:Port = ${Server().ip}:${Server().port}",
+              style: kstyleNumber,
+            )
+          ],
+        ),
         backgroundColor: Colors.amber,
         surfaceTintColor: Colors.blue,
         actions: [

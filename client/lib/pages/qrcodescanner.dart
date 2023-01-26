@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
 
 import 'dart:async';
 import 'dart:io';
@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:android_id/android_id.dart';
 import 'package:client/classes/transfer.dart';
 import 'package:client/variable.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:plugin_wifi_connect/plugin_wifi_connect.dart';
@@ -39,7 +40,7 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
 
   @override
   void initState() {
-    _getAndroidId();
+    _getId();
     super.initState();
   }
 
@@ -184,9 +185,17 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
     });
   }
 
-  void _getAndroidId() async {
-    var _androidIdPlugin = const AndroidId();
-    TransferData().client.ID = (await _androidIdPlugin.getId())!;
+  void _getId() async {
+    var deviceInfo = DeviceInfoPlugin();
+    if (Platform.isIOS) {
+      var iosDeviceInfo = await deviceInfo.iosInfo;
+      TransferData().client.ID =
+          iosDeviceInfo.identifierForVendor; // unique ID on iOS
+    } else if (Platform.isAndroid) {
+      var androidIdPlugin = const AndroidId();
+      TransferData().client.ID =
+          await androidIdPlugin.getId(); // unique ID on Android
+    }
   }
 
   List<String> data_extraction(String data) {
@@ -217,7 +226,8 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
 }
 
 class Dialog extends StatefulWidget {
-  Dialog({Key? key, required this.controller, required this.streamcontroller})
+  const Dialog(
+      {Key? key, required this.controller, required this.streamcontroller})
       : super(key: key);
   final StreamController<_Status> streamcontroller;
   final QRViewController controller;
@@ -244,18 +254,21 @@ class _DialogState extends State<Dialog> {
         setState(() {
           _result = TransferData().client.result!["result"];
           switch (TransferData().client.result!["result"]) {
-            case '100': // ! Code Expaier
+            case '100': // ?? Code Expaier
               _description = 'کد منقظی شده است.';
               break;
-            case '300': // ! Student is in List students and present
+            case '300': // ?? Student is in List students and present
               _description = 'حاضری شما قبلا زده شده است.';
               break;
-            case '400': // ! Student Number Not Found
+            case '400': // ?? Student Number Not Found
               _description = 'شماره دانشجویی شما یافت نشد.';
               break;
-            case '500': // ! Can Not Write on Excel File
+            case '500': // ?? Can Not Write on Excel File
               _description =
-                  ' مشکلی پیش آمده(لطفا به استاذ بگویید فایل را ببندند.) و دوباره تلاش کنید.';
+                  ' مشکلی پیش آمده(لطفا به استاد بگویید فایل را ببندند.) و دوباره تلاش کنید.';
+              break;
+            case '600': // ?? Can Not Write on Excel File
+              _description = 'مشکلی پیش آمده، به استاد اطلاع دهید.  ';
               break;
             default:
               {

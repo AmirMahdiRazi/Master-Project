@@ -79,6 +79,7 @@ class _DetailsState extends State<Details> {
                         "0",
                         "0",
                         "0",
+                        "0",
                         "0"
                       ])
                   .toList();
@@ -96,7 +97,7 @@ class _DetailsState extends State<Details> {
     Sheet sheetObject = excel["booksheet 1"];
     int index = 0;
     temp.map((e) => sheetObject.insertRowIterables(e, index++)).toList();
-    for (int i = 0; i <= 32; i++) {
+    for (int i = 2; i <= 32; i++) {
       excel.copy("booksheet 1", "booksheet $i");
     }
 
