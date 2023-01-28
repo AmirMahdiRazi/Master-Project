@@ -5,7 +5,7 @@ import 'dart:io';
 
 import 'package:android_id/android_id.dart';
 import 'package:client/classes/transfer.dart';
-import 'package:client/variable.dart';
+
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -36,7 +36,6 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
 
   QRViewController? controller;
   StreamController<_Status> streamContoller = StreamController<_Status>();
-  // Map<String, String>? result;
 
   @override
   void initState() {
@@ -156,7 +155,6 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
       controller.scannedDataStream.listen(
         (barcode) => setState(
           (() {
-            print(barcode.code!.toString());
             if (barcode.code != null &&
                 barcode.code!.toString().split('-').length == 5) {
               controller.pauseCamera();

@@ -118,7 +118,7 @@ class _SelectNumberMeettingState extends State<SelectNumberMeetting> {
                     Course().numberMeeting = textEditingController.text;
                     Course().readExcel();
                     String filePath =
-                        '${Base().path}/Datas/${Course().courseName}/${Course().courseName}.txt';
+                        '${Base().path}/Files/${Course().courseName}/${Course().courseName}.txt';
                     File(filePath).exists().then((value) {
                       if (value) {
                         DateTime now = DateTime.now();

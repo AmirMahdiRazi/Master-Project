@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 
@@ -7,6 +8,7 @@ import 'package:server/classes/courseandstudent.dart';
 
 import 'package:server/classes/server.dart';
 import 'package:server/constrant.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'bisection.dart';
 
@@ -17,11 +19,13 @@ class Attendance extends StatefulWidget {
   State<Attendance> createState() => _AttendanceState();
 }
 
-class _AttendanceState extends State<Attendance> {
+class _AttendanceState extends State<Attendance> with WindowListener {
   bool positive = true;
 
   @override
   void initState() {
+    windowManager.addListener(this);
+    _init();
     Timer.periodic(const Duration(seconds: 10), (timer) {
       if (Server().serverstatus == ServerStatuses.teminate) {
         setState(() {
@@ -36,8 +40,47 @@ class _AttendanceState extends State<Attendance> {
   @override
   void dispose() {
     if (Server().running) Server().stopManual();
+    windowManager.removeListener(this);
     super.dispose();
   }
+
+// ??
+  void _init() async {
+    // Add this line to override the default close handler
+    await windowManager.setPreventClose(true);
+    setState(() {});
+  }
+
+  @override
+  void onWindowClose() async {
+    bool _isPreventClose = await windowManager.isPreventClose();
+    if (_isPreventClose) {
+      showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: Text('آیا می خواهید برنامه را ببندید؟'),
+            actions: [
+              TextButton(
+                child: Text('نه'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('بله'),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  await windowManager.destroy();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+// ??
 
   @override
   Widget build(BuildContext context) {
@@ -74,11 +117,21 @@ class _AttendanceState extends State<Attendance> {
               ),
             ],
             onChanged: (b) async {
-              Server().startOrStop();
-              await Future.delayed(const Duration(seconds: 1));
-              setState(() {
-                positive = !Server().running;
-              });
+              try {
+                if (!Server().running) {
+                  await ServerSocket.bind(Server().ip, Server().port)
+                      .then((value) => value.close());
+                }
+
+                Server().startOrStop();
+                await Future.delayed(const Duration(seconds: 1));
+                setState(() {
+                  positive = !Server().running;
+                });
+              } catch (e) {
+                print(e);
+                dialog();
+              }
             },
             colorBuilder: (b) => b ? Colors.red : Colors.green,
             iconBuilder: (value) => value
@@ -137,6 +190,7 @@ class _AttendanceState extends State<Attendance> {
 
   Future dialog() {
     return showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text(
@@ -176,7 +230,8 @@ class _AttendanceState extends State<Attendance> {
           ),
           TextButton(
             onPressed: () {
-              Navigator.popUntil(context, ModalRoute.withName('/SelcetIP'));
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/SelectIP', ModalRoute.withName('/selcetCourse'));
             },
             child: Container(
               padding: const EdgeInsets.all(14),

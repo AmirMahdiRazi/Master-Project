@@ -43,7 +43,7 @@ class Course {
   List<String> androidId = [];
 
   void readExcel() {
-    var file = "${Base().path}/Datas/$courseName/$courseName.xlsx";
+    var file = "${Base().path}/Files/$courseName/$courseName.xlsx";
     var bytes = File(file).readAsBytesSync();
     var excel = Excel.decodeBytes(bytes);
 
@@ -76,7 +76,7 @@ class Course {
   }
 
   bool updateExcel(int row, String id) {
-    var file = "${Base().path}/Datas/$courseName/$courseName.xlsx";
+    var file = "${Base().path}/Files/$courseName/$courseName.xlsx";
     var bytes = File(file).readAsBytesSync();
     var excel = Excel.decodeBytes(bytes);
     Sheet sheetObject = excel["booksheet $numberMeeting"];
@@ -98,7 +98,7 @@ class Course {
           CellIndex.indexByColumnRow(rowIndex: row, columnIndex: 8), id);
       var fileBytes = excel.save();
       File fileExcel = File(
-          "${Base().path}/Datas/${Course().courseName}/${Course().courseName}.xlsx");
+          "${Base().path}/Files/${Course().courseName}/${Course().courseName}.xlsx");
       if (fileExcel.existsSync()) {
         fileExcel.writeAsBytesSync(fileBytes!);
       } else {

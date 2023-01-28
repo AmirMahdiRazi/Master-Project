@@ -9,6 +9,7 @@ import 'package:server/widgets/textkit.dart';
 
 import 'package:server/page_createcourse/Details.dart';
 import 'package:server/page_createcourse/table.dart';
+import 'package:window_manager/window_manager.dart';
 
 class BodyInitApp extends StatefulWidget {
   const BodyInitApp({super.key});
@@ -17,11 +18,63 @@ class BodyInitApp extends StatefulWidget {
   State<BodyInitApp> createState() => _BodyInitAppState();
 }
 
-class _BodyInitAppState extends State<BodyInitApp> {
+class _BodyInitAppState extends State<BodyInitApp> with WindowListener {
   final TextEditingController _textControllerFile = TextEditingController();
   List<List<String>> listData = [];
   bool _isNotClickAble = false;
   var fileExcelPath = '';
+
+  // ??
+  @override
+  void initState() {
+    windowManager.addListener(this);
+    _init();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    windowManager.removeListener(this);
+    super.dispose();
+  }
+
+  void _init() async {
+    // Add this line to override the default close handler
+    await windowManager.setPreventClose(true);
+    setState(() {});
+  }
+
+  @override
+  void onWindowClose() async {
+    bool _isPreventClose = await windowManager.isPreventClose();
+    if (_isPreventClose) {
+      showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: Text('آیا می خواهید برنامه را ببندید؟'),
+            actions: [
+              TextButton(
+                child: Text('نه'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('بله'),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  await windowManager.destroy();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  // ??
   @override
   Widget build(BuildContext context) {
     return Column(

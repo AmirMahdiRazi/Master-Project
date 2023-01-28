@@ -10,6 +10,7 @@ import 'package:server/classes/base.dart';
 import 'package:server/page_selectcourse/selectcourse.dart';
 import 'package:server/page_selectcourse/selectnumbermeetting.dart';
 import 'package:server/widgets/button.dart';
+import 'package:window_manager/window_manager.dart';
 
 class BodyCourse extends StatefulWidget {
   const BodyCourse({super.key});
@@ -18,18 +19,15 @@ class BodyCourse extends StatefulWidget {
   State<BodyCourse> createState() => _BodyCourseState();
 }
 
-class _BodyCourseState extends State<BodyCourse> {
+class _BodyCourseState extends State<BodyCourse> with WindowListener {
   late List<String> courses;
   bool _page = true;
   @override
   void initState() {
+    windowManager.addListener(this);
+    _init();
     checkFile();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
@@ -38,40 +36,94 @@ class _BodyCourseState extends State<BodyCourse> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          SizedBox(
-            width: 800,
-            height: 550,
-            child: Card(
-              elevation: 7,
-              child: Base().page
-                  ? SelectCourse(
-                      def: () {
-                        setState(() {});
-                        Base().setData(
-                            "${Course().courseName}/${Course().courseName}.txt");
-                      },
-                      files: courses,
-                      page: _page,
-                    )
-                  : SelectNumberMeetting(
-                      def: () {
-                        setState(() {});
-                      },
-                      data: Base().data,
-                    ),
+          Expanded(
+            flex: 8,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: SizedBox(
+                width: 800,
+                height: 550,
+                child: Card(
+                  elevation: 7,
+                  child: Base().page
+                      ? SelectCourse(
+                          def: () {
+                            setState(() {});
+                            Base().setData(
+                                "${Course().courseName}/${Course().courseName}.txt");
+                          },
+                          files: courses,
+                          page: _page,
+                        )
+                      : SelectNumberMeetting(
+                          def: () {
+                            setState(() {});
+                          },
+                          data: Base().data,
+                        ),
+                ),
+              ),
             ),
           ),
-          DesignedAnimatedButton(
-              width: 300,
-              text: 'ایجاد درس جدید',
-              onPress: () async {
-                Navigator.pushNamed(context, '/createCourse');
-              })
+          Expanded(
+            flex: 1,
+            child: DesignedAnimatedButton(
+                width: 300,
+                text: 'ایجاد درس جدید',
+                onPress: () async {
+                  Navigator.pushNamed(context, '/createCourse');
+                }),
+          ),
         ],
       ),
     );
   }
 
+// ??
+
+  @override
+  void dispose() {
+    windowManager.removeListener(this);
+    super.dispose();
+  }
+
+  void _init() async {
+    // Add this line to override the default close handler
+    await windowManager.setPreventClose(true);
+    setState(() {});
+  }
+
+  @override
+  void onWindowClose() async {
+    bool _isPreventClose = await windowManager.isPreventClose();
+    if (_isPreventClose) {
+      showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: Text('آیا می خواهید برنامه را ببندید؟'),
+            actions: [
+              TextButton(
+                child: Text('نه'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('بله'),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  await windowManager.destroy();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+// ??
   void checkFile() async {
     courses = [];
     final dir = Directory('${Base().path}/Datas');

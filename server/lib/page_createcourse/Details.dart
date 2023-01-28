@@ -102,7 +102,7 @@ class _DetailsState extends State<Details> {
     }
 
     var fileBytes = excel.save();
-    String path = "${Base().path}/Datas/${_textControllerCourse.text}/";
+    String path = "${Base().path}/Files/${_textControllerCourse.text}/";
     try {
       File("${path}/${_textControllerCourse.text}.xlsx")
         ..createSync(recursive: true)

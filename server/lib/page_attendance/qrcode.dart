@@ -27,6 +27,8 @@ class _QRGenearatorState extends State<QRGenearator> {
     Server().ipConvert();
     print(Server().port);
     _stop = false;
+    print(
+        '${Server().user}-${Server().pass}-${Server().ipConvert()}-${Server().port}-${Server().code}');
     Timer.periodic(const Duration(hours: 1), (t) {
       Server().code = random.nextInt(9999).toString();
       print(

@@ -6,7 +6,7 @@ import 'package:network_info_plus/network_info_plus.dart';
 import 'package:server/constrant.dart';
 import 'package:server/widgets/button.dart';
 import 'package:server/pages_serverinit/textfield.dart';
-import 'package:server/classes/base.dart';
+
 import 'package:server/classes/server.dart';
 
 class HotspotPage extends StatefulWidget {
@@ -116,7 +116,7 @@ class _HotspotPageState extends State<HotspotPage> {
                                   child: FittedBox(
                                     fit: BoxFit.fitWidth,
                                     child: DesignedAnimatedButton(
-                                        duration: 2000,
+                                        duration: 3000,
                                         borderRadius: 30,
                                         height: 80,
                                         text: e,
@@ -130,10 +130,10 @@ class _HotspotPageState extends State<HotspotPage> {
                                               widget.textControllerSSIDHot.text;
                                           Server().ip = e.split(": ")[1];
 
-                                          Server()
-                                              .getUnusedPort(e.split(": ")[1]);
                                           Future.delayed(
-                                              const Duration(seconds: 2), () {
+                                              const Duration(seconds: 3), () {
+                                            Server().getUnusedPort(
+                                                e.split(": ")[1]);
                                             Server().serverstatus =
                                                 ServerStatuses.normal;
                                             setState(() {});

@@ -13,7 +13,7 @@ class Base {
   late List<String> data;
 
   void setData(String destination) {
-    List<String> temp = File('$path/Datas/$destination').readAsLinesSync();
+    List<String> temp = File('$path/Files/$destination').readAsLinesSync();
     data = List.from(temp.reversed);
   }
 }

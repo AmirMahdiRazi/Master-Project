@@ -21,22 +21,24 @@ class Server {
   late int port;
   ServerSocket? _serverSocket;
   bool running = false;
-  ServerStatuses serverstatus = ServerStatuses.normal;
   bool _runCheker = true;
+  ServerStatuses serverstatus = ServerStatuses.normal;
   List<String> logs = [];
   StatusConnection connection = StatusConnection.wifi;
   final List<Socket> _clients = [];
 
   void _checkServer() {
-    Timer.periodic(const Duration(seconds: 10), (timer) {
+    Timer.periodic(const Duration(seconds: 10), (timer) async {
       if (_runCheker == false) {
         timer.cancel();
       } else {
         try {
-          Socket.connect(ip, port, timeout: const Duration(seconds: 8));
-          print("work");
+          await Socket.connect(
+            ip,
+            port,
+            timeout: const Duration(seconds: 5),
+          ).then((value) => value.close());
         } catch (e) {
-          print("e");
           _stop();
           serverstatus = ServerStatuses.teminate;
           timer.cancel();
@@ -55,15 +57,19 @@ class Server {
 
   Future<void> _start() async {
     await runZoned(() async {
-      _serverSocket = await ServerSocket.bind(ip, port);
-      running = true;
-      _runCheker = true;
+      try {
+        _serverSocket = await ServerSocket.bind(ip, port);
+        running = true;
+        _runCheker = true;
 
-      // _checkServer();
-      logs.add("Server is running on : $ip:$port");
-      _serverSocket!.listen((Socket event) {
-        handleConnection(event);
-      });
+        _checkServer();
+        logs.add("Server is running on : $ip:$port");
+        _serverSocket!.listen((Socket event) {
+          handleConnection(event);
+        });
+      } catch (e) {
+        print('e');
+      }
     });
   }
 
@@ -175,7 +181,6 @@ class Server {
   }
 
   void getUnusedPort(String address) async {
-    await Future.delayed(const Duration(seconds: 2));
     int portUnused = await ServerSocket.bind(address, 0).then((socket) {
       var portUnused = socket.port;
       socket.close();
