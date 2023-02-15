@@ -21,7 +21,7 @@ class Server {
   late int port;
   ServerSocket? _serverSocket;
   bool running = false;
-  bool _runCheker = true;
+  bool _runChecker = true;
   ServerStatuses serverstatus = ServerStatuses.normal;
   List<String> logs = [];
   StatusConnection connection = StatusConnection.wifi;
@@ -29,7 +29,7 @@ class Server {
 
   void _checkServer() {
     Timer.periodic(const Duration(seconds: 10), (timer) async {
-      if (_runCheker == false) {
+      if (_runChecker == false) {
         timer.cancel();
       } else {
         try {
@@ -60,7 +60,7 @@ class Server {
       try {
         _serverSocket = await ServerSocket.bind(ip, port);
         running = true;
-        _runCheker = true;
+        _runChecker = true;
 
         _checkServer();
         logs.add("Server is running on : $ip:$port");
@@ -82,7 +82,7 @@ class Server {
     _serverSocket = null;
     running = false;
 
-    _runCheker = false;
+    _runChecker = false;
   }
 
   void handleConnection(Socket client) {
@@ -92,6 +92,7 @@ class Server {
     client.listen(
       (Uint8List data) {
         final message = String.fromCharCodes(data);
+        print(message);
         String result = '';
         _clients.add(client);
         if (message.split('-').length == 3) {
@@ -142,6 +143,7 @@ class Server {
             if (result.isEmpty) {
               result = '{"result": "400"}'; // ?? Student Number Not Found
             }
+
             client.write(result);
           }
         }

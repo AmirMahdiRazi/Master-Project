@@ -1,9 +1,7 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:server/classes/base.dart';
 import 'package:server/classes/courseandstudent.dart';
-
 import 'package:server/widgets/TextandTextField.dart';
 import 'package:server/widgets/button.dart';
 import 'package:server/widgets/textkit.dart';
@@ -24,11 +22,6 @@ class _SelectNumberMeettingState extends State<SelectNumberMeetting> {
   bool _isNotClieckAble = true;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -36,19 +29,37 @@ class _SelectNumberMeettingState extends State<SelectNumberMeetting> {
         SizedBox(
           width: 400,
           height: 100,
-          child: TextandTextField(
-              fouce: true,
-              count: 2,
-              textEditingController: textEditingController,
-              def: (value) {
-                setState(() {});
-                if (value.isNotEmpty && int.parse(value) <= 32) {
-                  _isNotClieckAble = false;
-                } else {
-                  _isNotClieckAble = true;
-                }
-              },
-              txt: "جلسه:"),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                // ignore: prefer_const_literals_to_create_immutables
+                children: [
+                  const Text('بیشترین مقدار :'),
+                  const Text(
+                    '32',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: Colors.red,
+                        fontSize: 20),
+                  )
+                ],
+              ),
+              TextandTextField(
+                  fouce: true,
+                  count: 2,
+                  textEditingController: textEditingController,
+                  def: (value) {
+                    setState(() {});
+                    if (value.isNotEmpty && int.parse(value) <= 32) {
+                      _isNotClieckAble = false;
+                    } else {
+                      _isNotClieckAble = true;
+                    }
+                  },
+                  txt: "جلسه:"),
+            ],
+          ),
         ),
         widget.data.isEmpty
             ? const DesignAnimatedTextKit(
@@ -61,6 +72,8 @@ class _SelectNumberMeettingState extends State<SelectNumberMeetting> {
                 child: ListView.builder(
                     itemCount: widget.data.length,
                     itemBuilder: ((context, index) {
+                      List<String> temp = widget.data[index].split(' ');
+
                       return SizedBox(
                         height: 100,
                         child: Card(
@@ -73,18 +86,15 @@ class _SelectNumberMeettingState extends State<SelectNumberMeetting> {
                               children: [
                                 DesignAnimatedTextKit(
                                   fontsize: 30,
-                                  text:
-                                      "تاریخ: ${widget.data[index].split(' ')[2]}",
+                                  text: "تاریخ: ${temp[2]}",
                                 ),
                                 DesignAnimatedTextKit(
                                   fontsize: 30,
-                                  text:
-                                      "ساعت: ${widget.data[index].split(' ')[1]}",
+                                  text: "ساعت: ${temp[1]}",
                                 ),
                                 DesignAnimatedTextKit(
                                   fontsize: 30,
-                                  text:
-                                      "جلسه: ${widget.data[index].split(' ')[0]}",
+                                  text: "جلسه: ${temp[0]}",
                                 ),
                               ],
                             ),
@@ -99,6 +109,7 @@ class _SelectNumberMeettingState extends State<SelectNumberMeetting> {
             Card(
               elevation: 17,
               child: DesignedAnimatedButton(
+                bRadius: 0.0,
                 width: 200,
                 text: 'قبلی',
                 onPress: (() {
@@ -112,6 +123,7 @@ class _SelectNumberMeettingState extends State<SelectNumberMeetting> {
               child: Visibility(
                 visible: !_isNotClieckAble,
                 child: DesignedAnimatedButton(
+                  bRadius: 0.0,
                   width: 200,
                   text: 'تمام',
                   onPress: (() {
@@ -121,12 +133,18 @@ class _SelectNumberMeettingState extends State<SelectNumberMeetting> {
                         '${Base().path}/Files/${Course().courseName}/${Course().courseName}.txt';
                     File(filePath).exists().then((value) {
                       if (value) {
-                        DateTime now = DateTime.now();
-                        File(filePath).writeAsStringSync(
-                            '${Course().numberMeeting} ${now.hour}:${now.minute}:${now.second} ${now.year}/${now.month}/${now.day}',
-                            mode: FileMode.append);
+                        String dataLine = formatString();
+                        File(filePath)
+                            .writeAsStringSync(dataLine, mode: FileMode.append);
+                        setState(() {
+                          widget.data.insert(0, dataLine);
+                        });
+                      } else {
+                        widget.data.insert(0,
+                            'خطایی رخ داده است .نمی توان در فایل ذخیره کرد.');
                       }
                     });
+
                     Navigator.pushNamed(context, '/SelectIP');
                   }),
                 ),
@@ -136,5 +154,19 @@ class _SelectNumberMeettingState extends State<SelectNumberMeetting> {
         ),
       ],
     );
+  }
+
+  String formatString() {
+    DateTime now = DateTime.now();
+    List<dynamic> temp = [
+      Course().numberMeeting,
+      now.hour,
+      now.minute,
+      now.second,
+      now.month,
+      now.day,
+    ].map((e) => e.toString().padLeft(2, '0')).toList();
+
+    return '${temp[0]} ${temp[1]}:${temp[2]}:${temp[3]} ${now.year}/${temp[4]}/${temp[5]} \n';
   }
 }

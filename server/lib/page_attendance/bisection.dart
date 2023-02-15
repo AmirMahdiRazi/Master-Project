@@ -44,17 +44,29 @@ class _BisectionState extends State<Bisection> {
                       return Card(
                         semanticContainer: true,
                         margin: const EdgeInsets.all(10),
-                        child: ListTile(
-                          title: ListTile(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(colors: [
+                              Color.fromARGB(255, 9, 161, 167),
+                              Color.fromARGB(255, 4, 167, 53)
+                            ], stops: [
+                              0,
+                              .9
+                            ]),
+                          ),
+                          child: ListTile(
                             leading: CircleAvatar(
                               child: Text(
                                 Course().studentsPresent[index].index,
-                                style: kstyleNumber,
+                                style: TextStyle(
+                                  fontSize: 25,
+                                ),
                               ),
                             ),
                             title: Text(
                               '${Course().studentsPresent[index].fName} ${Course().studentsPresent[index].lName}',
-                              style: TextStyle(fontSize: 25),
+                              style:
+                                  TextStyle(fontSize: 30, color: Colors.white),
                             ),
                             trailing: FittedBox(
                               fit: BoxFit.contain,
@@ -62,28 +74,32 @@ class _BisectionState extends State<Bisection> {
                                 children: [
                                   Text(
                                     Course().studentsPresent[index].stdNumber,
-                                    style: kstyleNumber,
+                                    style: TextStyle(
+                                        fontSize: 30, color: Colors.white),
                                   ),
                                   const SizedBox(
                                     width: 50,
                                   ),
                                   Text(
                                     Course().studentsPresent[index].time!,
-                                    style: kstyleNumber,
+                                    style: TextStyle(
+                                        fontSize: 30, color: Colors.white),
                                   ),
                                   const SizedBox(
                                     width: 50,
                                   ),
                                   Text(
                                     Course().studentsPresent[index].day!,
-                                    style: kstyleNumber,
+                                    style: TextStyle(
+                                        fontSize: 30, color: Colors.white),
                                   ),
                                   const SizedBox(
                                     width: 50,
                                   ),
                                   Text(
                                     Course().studentsPresent[index].date!,
-                                    style: kstyleNumber,
+                                    style: TextStyle(
+                                        fontSize: 30, color: Colors.white),
                                   ),
                                 ],
                               ),

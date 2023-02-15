@@ -43,11 +43,14 @@ class Course {
   List<String> androidId = [];
 
   void readExcel() {
+    Course().students = [];
+    Course().studentsPresent = [];
     var file = "${Base().path}/Files/$courseName/$courseName.xlsx";
     var bytes = File(file).readAsBytesSync();
     var excel = Excel.decodeBytes(bytes);
 
     Sheet sheetObject = excel["booksheet $numberMeeting"];
+
     List<String> temp;
     for (var row in sheetObject.rows) {
       temp = row.map((e) => e!.value.toString()).toList();

@@ -14,6 +14,8 @@ class TransferData {
 
   Client client = Client();
 
+  late Stream stream;
+
   void transferDataWifi() async {
     try {
       final socket = await Socket.connect(client.ipServer, client.port,
@@ -32,6 +34,7 @@ class TransferData {
             client.result = {
               'result': res["result"],
             };
+            stream;
 
             socket.close();
             PluginWifiConnect.disconnect();
@@ -48,11 +51,13 @@ class TransferData {
       );
 
       socket.write(client.combine_data());
-      socket.close();
-      client.result = null;
+      Future.delayed(Duration(seconds: 7), () {
+        socket.close();
+        client.result = null;
+      });
     } catch (e) {
-      client.result = {'result': '600'};
-
+      client.result = {'result': 'Server Offline'};
+      stream;
       client.logs.add("can not find server");
     }
   }

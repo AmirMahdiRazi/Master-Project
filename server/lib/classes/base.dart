@@ -8,11 +8,11 @@ class Base {
   }
 
   Base._internal();
-  late final String path;
+  String path = '';
   bool page = true;
   late List<String> data;
 
-  void setData(String destination) {
+  void readData(String destination) {
     List<String> temp = File('$path/Files/$destination').readAsLinesSync();
     data = List.from(temp.reversed);
   }

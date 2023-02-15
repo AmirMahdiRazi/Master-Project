@@ -1,17 +1,19 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:server/classes/server.dart';
+
 import 'package:server/page_attendance/attendance_page.dart';
 import 'package:server/page_createcourse/createcourse_page.dart';
 import 'package:server/pages_serverinit/serverInitializer_page.dart';
 import 'package:server/page_selectcourse/selectcourse_page.dart';
 import 'package:server/classes/base.dart';
-import 'package:desktop_window/desktop_window.dart';
+
 import 'package:window_manager/window_manager.dart';
 
 void main() async {
-  Base().path = Directory.current.path.replaceAll(RegExp(r'\\'), ('/'));
+  if (Base().path.isEmpty) {
+    Base().path = Directory.current.path.replaceAll(RegExp(r'\\'), ('/'));
+  }
 
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
@@ -43,56 +45,12 @@ class _MyAppState extends State<MyApp> {
       },
     );
   }
-  // @override
-  // void initState() {
-  //   windowManager.addListener(this);
-  //   _init();
-  //   super.initState();
-  // }
-
-  // @override
-  // void dispose() {
-  //   windowManager.removeListener(this);
-  //   super.dispose();
-  // }
-
-  // void _init() async {
-  //   // Add this line to override the default close handler
-  //   await windowManager.setPreventClose(true);
-  //   setState(() {});
-  // }
-  // void onWindowClose() async {
-  //   bool _isPreventClose = await windowManager.isPreventClose();
-  //   if (_isPreventClose) {
-  //     showDialog(
-  //       context: context,
-  //       builder: (_) {
-  //         return AlertDialog(
-  //           title: Text('Are you sure you want to close this window?'),
-  //           actions: [
-  //             TextButton(
-  //               child: Text('No'),
-  //               onPressed: () {
-  //                 Navigator.of(context).pop();
-  //               },
-  //             ),
-  //             TextButton(
-  //               child: Text('Yes'),
-  //               onPressed: () async {
-  //                 Navigator.of(context).pop();
-  //                 await windowManager.destroy();
-  //               },
-  //             ),
-  //           ],
-  //         );
-  //       },
-  //     );
-  //   }
-  // }
 }
 
 void checkDevice() async {
-  if (Platform.isWindows) await testWindowFunctions();
+  if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+    await testWindowFunctions();
+  }
 }
 
 Future testWindowFunctions() async {
@@ -106,5 +64,5 @@ Future testWindowFunctions() async {
     await windowManager.show();
     await windowManager.focus();
   });
-  windowManager.setTitle('سامانه حضور و غیاب دانشجویان دانشگاه');
+  windowManager.setTitle('سامانه حضور و غیاب دانشجویان دانشگاه سمنان');
 }

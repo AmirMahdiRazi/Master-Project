@@ -17,8 +17,6 @@ bool _pause = false;
 String? _result;
 String? _description;
 
-enum _Status { serverOnline, serverOffline, waited }
-
 class QRCodeScanner extends StatefulWidget {
   const QRCodeScanner({super.key});
 
@@ -35,7 +33,6 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
   bool isConnected = false;
 
   QRViewController? controller;
-  StreamController<_Status> streamContoller = StreamController<_Status>();
 
   @override
   void initState() {
@@ -46,7 +43,7 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
   @override
   void dispose() {
     controller?.dispose();
-    streamContoller.close();
+
     super.dispose();
   }
 
@@ -159,9 +156,7 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
                 barcode.code!.toString().split('-').length == 5) {
               controller.pauseCamera();
 
-              PluginWifiConnect.disconnect();
-
-              List<String> data = data_extraction(barcode.code!);
+              List<String> data = dataExtraction(barcode.code!);
 
               TransferData().client.ipServer = data[2];
               TransferData().client.port = int.parse(data[3]);
@@ -196,7 +191,7 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
     }
   }
 
-  List<String> data_extraction(String data) {
+  List<String> dataExtraction(String data) {
     List<String> list, liIp = [];
     list = data.split('-');
     liIp = list[2].split('.');
@@ -216,7 +211,6 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
       builder: ((context) {
         return Dialog(
           controller: controller!,
-          streamcontroller: streamContoller,
         );
       }),
     );
@@ -224,10 +218,8 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
 }
 
 class Dialog extends StatefulWidget {
-  const Dialog(
-      {Key? key, required this.controller, required this.streamcontroller})
-      : super(key: key);
-  final StreamController<_Status> streamcontroller;
+  const Dialog({Key? key, required this.controller}) : super(key: key);
+
   final QRViewController controller;
   @override
   State<Dialog> createState() => _DialogState();
@@ -235,67 +227,65 @@ class Dialog extends StatefulWidget {
 
 class _DialogState extends State<Dialog> {
   @override
-  void dispose() {
-    widget.streamcontroller.close();
-    getStream();
-    super.dispose();
+  void initState() {
+    TransferData().stream = getStream;
+    super.initState();
   }
 
-  Stream<_Status> getStream() async* {
-    await Future.delayed(const Duration(seconds: 10));
+  Stream<String> get getStream async* {
     if (TransferData().client.result != null) {
       if (TransferData().client.result!["result"] == '200') {
         Navigator.of(context).pop();
         Navigator.pushNamedAndRemoveUntil(
             context, '/second', ((route) => false));
       } else if (TransferData().client.result!["result"] != '200') {
-        setState(() {
-          _result = TransferData().client.result!["result"];
-          switch (TransferData().client.result!["result"]) {
-            case '100': // ?? Code Expaier
-              _description = 'کد منقظی شده است.';
-              break;
-            case '300': // ?? Student is in List students and present
-              _description = 'حاضری شما قبلا زده شده است.';
-              break;
-            case '400': // ?? Student Number Not Found
-              _description = 'شماره دانشجویی شما یافت نشد.';
-              break;
-            case '500': // ?? Can Not Write on Excel File
-              _description =
-                  ' مشکلی پیش آمده(لطفا به استاد بگویید فایل را ببندند.) و دوباره تلاش کنید.';
-              break;
-            case '600': // ?? Can Not Write on Excel File
-              _description = 'مشکلی پیش آمده، به استاد اطلاع دهید.  ';
-              break;
-            default:
-              {
-                _description = 'سرور در دسترس نیست';
-              }
-              break;
-          }
-          TransferData().client.result = null;
-        });
-        yield _Status.serverOffline;
+        _result = TransferData().client.result!["result"];
+
+        switch (TransferData().client.result!["result"]) {
+          case '100': // ?? Code Expaier
+            _description = 'کد منقظی شده است.';
+            break;
+          case '300': // ?? Student is in List students and present
+            _description = 'حاضری شما قبلا زده شده است.';
+            break;
+          case '400': // ?? Student Number Not Found
+            _description = 'شماره دانشجویی شما یافت نشد.';
+            break;
+          case '500': // ?? Can Not Write on Excel File
+            _description =
+                ' مشکلی پیش آمده(لطفا به استاد بگویید فایل را ببندند.) و دوباره تلاش کنید.';
+            break;
+          case '600': // ?? Can Not Write on Excel File
+            _description = 'مشکلی پیش آمده، به استاد اطلاع دهید.  ';
+            break;
+          default:
+            {
+              _description = 'سرور در دسترس نیست';
+            }
+            break;
+        }
+        print(_result);
+        TransferData().client.result = null;
+
+        yield _description ?? "error";
       } else {
-        setState(() {
-          _description = 'لطفا دوباره تلاش کنید';
-        });
-        yield _Status.waited;
+        _description = 'لطفا دوباره تلاش کنید';
+        yield _description ?? "error";
       }
     }
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Object>(
-        stream: getStream(),
+        stream: getStream,
         builder: (context, snapshot) {
           return AlertDialog(
-            title: _result == null
+            title: !snapshot.hasData
                 ? const Center(child: CircularProgressIndicator())
                 : null,
-            content: _result == null
+            content: !snapshot.hasData
                 ? const Text(
                     'لطفا صبر کنید',
                     textAlign: TextAlign.center,
@@ -310,7 +300,7 @@ class _DialogState extends State<Dialog> {
                       ),
                     ],
                   ),
-            actions: _result == null
+            actions: !snapshot.hasData
                 ? []
                 : [
                     ElevatedButton(

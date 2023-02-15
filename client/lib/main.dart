@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:client/backgroundwidget.dart';
 import 'package:client/pages/connection.dart';
 import 'package:client/pages/info_page.dart';
 
@@ -22,7 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light(),
       initialRoute: '/',
       routes: {
-        '/': (context) => Info_Page(),
+        '/': (context) => BackgroundWidget(child: Info_Page()),
         '/first': (context) => ConnectionPage(),
         '/second': (context) => Success(),
       },

@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 
 class DesginedTable extends StatelessWidget {
-  DesginedTable({super.key, required this.Datas});
-  List<List<String>> Datas;
+  DesginedTable({super.key, required this.files});
+  List<List<String>> files;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -19,25 +19,27 @@ class DesginedTable extends StatelessWidget {
           ])),
           child: SingleChildScrollView(
             child: Table(
-              children: Datas.map((e) => TableRow(
-                  children: e
-                      .map((e) => Card(
-                            child: Center(
-                                child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: FittedBox(
-                                fit: BoxFit.fitWidth,
-                                child: Text(
-                                  e,
-                                  style: const TextStyle(
-                                      fontSize: 25,
-                                      fontFamily: "bnazanin",
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                            )),
-                          ))
-                      .toList())).toList(),
+              children: files
+                  .map((e) => TableRow(
+                      children: e
+                          .map((e) => Card(
+                                child: Center(
+                                    child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: FittedBox(
+                                    fit: BoxFit.fitWidth,
+                                    child: Text(
+                                      e,
+                                      style: const TextStyle(
+                                          fontSize: 25,
+                                          fontFamily: "bnazanin",
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                )),
+                              ))
+                          .toList()))
+                  .toList(),
             ),
           ),
         ),

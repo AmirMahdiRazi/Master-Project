@@ -20,6 +20,7 @@ class SelectCourse extends StatelessWidget {
           elevation: 10,
           margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
           child: DesignedAnimatedButton(
+            bRadius: 0,
             width: 800,
             height: 90,
             onPress: () {

@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:network_info_plus/network_info_plus.dart';
@@ -14,8 +16,6 @@ class ServerInit extends StatefulWidget {
   State<ServerInit> createState() => _ServerInitState();
 }
 
-enum _Stauts { wifi, hotspot }
-
 class _ServerInitState extends State<ServerInit> with WindowListener {
   late List<List<String>> ethernet;
   TextEditingController textControllerPasswordWifi = TextEditingController();
@@ -24,57 +24,6 @@ class _ServerInitState extends State<ServerInit> with WindowListener {
   Future<StatusConnection> state = Server().checkWifi();
   final info = NetworkInfo();
   bool positive = true;
-
-  // ??
-  @override
-  void initState() {
-    windowManager.addListener(this);
-    _init();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    windowManager.removeListener(this);
-    super.dispose();
-  }
-
-  void _init() async {
-    // Add this line to override the default close handler
-    await windowManager.setPreventClose(true);
-    setState(() {});
-  }
-
-  @override
-  void onWindowClose() async {
-    bool _isPreventClose = await windowManager.isPreventClose();
-    if (_isPreventClose) {
-      showDialog(
-        context: context,
-        builder: (_) {
-          return AlertDialog(
-            title: Text('آیا می خواهید برنامه را ببندید؟'),
-            actions: [
-              TextButton(
-                child: Text('نه'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: Text('بله'),
-                onPressed: () async {
-                  Navigator.of(context).pop();
-                  await windowManager.destroy();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-  // ??
 
   @override
   Widget build(BuildContext context) {

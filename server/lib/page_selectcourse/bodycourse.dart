@@ -22,6 +22,7 @@ class BodyCourse extends StatefulWidget {
 class _BodyCourseState extends State<BodyCourse> with WindowListener {
   late List<String> courses;
   bool _page = true;
+  bool lastState = false;
   @override
   void initState() {
     windowManager.addListener(this);
@@ -49,7 +50,7 @@ class _BodyCourseState extends State<BodyCourse> with WindowListener {
                       ? SelectCourse(
                           def: () {
                             setState(() {});
-                            Base().setData(
+                            Base().readData(
                                 "${Course().courseName}/${Course().courseName}.txt");
                           },
                           files: courses,
@@ -88,7 +89,6 @@ class _BodyCourseState extends State<BodyCourse> with WindowListener {
   }
 
   void _init() async {
-    // Add this line to override the default close handler
     await windowManager.setPreventClose(true);
     setState(() {});
   }
@@ -96,21 +96,35 @@ class _BodyCourseState extends State<BodyCourse> with WindowListener {
   @override
   void onWindowClose() async {
     bool _isPreventClose = await windowManager.isPreventClose();
-    if (_isPreventClose) {
+    if (lastState != true && _isPreventClose) {
+      lastState = true;
       showDialog(
         context: context,
         builder: (_) {
           return AlertDialog(
-            title: Text('آیا می خواهید برنامه را ببندید؟'),
+            title: const Text(
+              'آیا می خواهید برنامه را ببندید؟',
+              style: TextStyle(fontSize: 25),
+              textAlign: TextAlign.right,
+            ),
             actions: [
               TextButton(
-                child: Text('نه'),
+                child: const Text(
+                  'نه',
+                  style: TextStyle(fontSize: 20, color: Colors.green),
+                  textAlign: TextAlign.right,
+                ),
                 onPressed: () {
+                  lastState = false;
                   Navigator.of(context).pop();
                 },
               ),
               TextButton(
-                child: Text('بله'),
+                child: const Text(
+                  'بله',
+                  style: TextStyle(fontSize: 20, color: Colors.red),
+                  textAlign: TextAlign.right,
+                ),
                 onPressed: () async {
                   Navigator.of(context).pop();
                   await windowManager.destroy();
@@ -126,7 +140,7 @@ class _BodyCourseState extends State<BodyCourse> with WindowListener {
 // ??
   void checkFile() async {
     courses = [];
-    final dir = Directory('${Base().path}/Datas');
+    final dir = Directory('${Base().path}/Files');
 
     if (dir.existsSync()) {
       List<String> li1 = dir.listSync().map((e) => e.path).toList();

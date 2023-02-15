@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'dart:async';
 import 'dart:io';
 
@@ -62,7 +64,6 @@ class _HotspotPageState extends State<HotspotPage> {
               children: [
                 DesignedTextField(
                   name: 'نام هات اسپات(Hotspot SSID)',
-                  label: 'HotSpotSSID',
                   help: 'HotSpotSSID',
                   icon: Icons.wifi_tethering,
                   textEditingController: widget.textControllerSSIDHot,
@@ -78,7 +79,6 @@ class _HotspotPageState extends State<HotspotPage> {
                 ),
                 DesignedTextField(
                   name: 'پسورد(Password)',
-                  label: 'Password',
                   help: 'Password',
                   pass: true,
                   textEditingController: widget.textControllerPassHot,
@@ -106,18 +106,16 @@ class _HotspotPageState extends State<HotspotPage> {
                       height: 30,
                     ),
                     Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: listIPS
                             .map(
                               (e) => AbsorbPointer(
                                 absorbing: isNotClickable,
                                 child: SizedBox(
-                                  height: 100,
+                                  height: 80,
                                   child: FittedBox(
                                     fit: BoxFit.fitWidth,
                                     child: DesignedAnimatedButton(
                                         duration: 3000,
-                                        borderRadius: 30,
                                         height: 80,
                                         text: e,
                                         width: 500,
@@ -154,6 +152,7 @@ class _HotspotPageState extends State<HotspotPage> {
           } else {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              // ignore: prefer_const_literals_to_create_immutables
               children: [
                 const Text(
                   "لطفا hotspot را روشن کنید.",

@@ -4,13 +4,12 @@ class DesignedTextField extends StatefulWidget {
   DesignedTextField(
       {super.key,
       required this.name,
-      required this.label,
       required this.help,
       required this.textEditingController,
       required this.onChange,
       this.icon,
       this.pass = null});
-  String name, label, help;
+  String name, help;
   bool? pass;
   TextEditingController textEditingController;
   VoidCallback onChange;

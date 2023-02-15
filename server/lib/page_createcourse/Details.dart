@@ -11,8 +11,8 @@ import 'package:server/widgets/TextandTextField.dart';
 import 'package:server/classes/base.dart';
 
 class Details extends StatefulWidget {
-  Details({super.key, required this.datas});
-  List<List<String>> datas = [];
+  Details({super.key, required this.files});
+  List<List<String>> files = [];
   @override
   State<Details> createState() => _DetailsState();
 }
@@ -59,7 +59,6 @@ class _DetailsState extends State<Details> {
         AbsorbPointer(
           absorbing: _isNotClickAble,
           child: DesignedAnimatedButton(
-            borderRadius: 30,
             width: 200,
             height: 65,
             text: "ذخیره",
@@ -69,8 +68,8 @@ class _DetailsState extends State<Details> {
                   stdNumber = int.parse(_textEditingControllerStdNumber.text);
               List<List<String>> temp;
               int index = 1;
-              widget.datas.removeAt(0);
-              temp = widget.datas
+              widget.files.removeAt(0);
+              temp = widget.files
                   .map((e) => [
                         "${index++}",
                         e[fName],

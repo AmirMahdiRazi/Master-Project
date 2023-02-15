@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:client/widgets/animatedbutton.dart';
 
 import 'package:client/widgets/checkboxlisttile.dart';
@@ -37,72 +35,71 @@ class _HomePageState extends State<Info_Page> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            height: 150,
-            child: Lottie.asset(
-              'assets/account-box.json',
-              fit: BoxFit.fill,
-              repeat: false,
-            ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          height: 150,
+          child: Lottie.asset(
+            'assets/account-box.json',
+            fit: BoxFit.fill,
+            repeat: false,
           ),
-          SizedBox(
-            height: 15,
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 50),
+          child: TextFormField(
+            style: TextStyle(color: Colors.white),
+            textAlign: TextAlign.right,
+            controller: controllerStdNum,
+            textDirection: TextDirection.rtl,
+            autofocus: true,
+            maxLines: 1,
+            maxLength: 10,
+            textInputAction: TextInputAction.next,
+            decoration:
+                kTextFieldDecoration.copyWith(labelText: 'شماره دانشجویی'),
+            keyboardType: TextInputType.datetime,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.digitsOnly
+            ],
+            onChanged: (value) {
+              setState(() {
+                _isFill = controllerStdNum.text.length == 10 ? true : false;
+              });
+            },
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50),
-            child: TextFormField(
-              textAlign: TextAlign.right,
-              controller: controllerStdNum,
-              textDirection: TextDirection.rtl,
-              autofocus: true,
-              maxLines: 1,
-              maxLength: 10,
-              textInputAction: TextInputAction.next,
-              decoration:
-                  kTextFieldDecoration.copyWith(labelText: 'شماره دانشجویی'),
-              keyboardType: TextInputType.datetime,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.digitsOnly
-              ],
-              onChanged: (value) {
-                setState(() {
-                  _isFill = controllerStdNum.text.length == 10 ? true : false;
-                });
-              },
-            ),
-          ),
-          Visibility(
-            visible: _isFill,
-            child: Column(
-              children: [
-                DesignedAnimatedButton(
-                  text: 'بعدی',
-                  onPress: () {
-                    TransferData().client.stdNumber = controllerStdNum.text;
-                    checked();
-                    isCheck ? readOnDisk() : null;
-                    Future.delayed(Duration(milliseconds: 501), () {
-                      Navigator.pushNamed(context, '/first');
-                    });
-                  },
+        ),
+        Visibility(
+          visible: _isFill,
+          child: Column(
+            children: [
+              DesignedAnimatedButton(
+                text: 'بعدی',
+                onPress: () {
+                  TransferData().client.stdNumber = controllerStdNum.text;
+                  checked();
+                  isCheck ? readOnDisk() : null;
+                  Future.delayed(Duration(milliseconds: 501), () {
+                    Navigator.pushNamed(context, '/first');
+                  });
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.all(25),
+                child: DesignedCheckboxListTile(
+                  text: 'به خاطر بسپار',
+                  function: checked,
+                  subTitle: result_saveOnDisk,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(25),
-                  child: DesignedCheckboxListTile(
-                    text: 'به خاطر بسپار',
-                    function: checked,
-                    subTitle: result_saveOnDisk,
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
+              ),
+            ],
+          ),
+        )
+      ],
     );
   }
 

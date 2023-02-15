@@ -22,46 +22,58 @@ class _BodyInitAppState extends State<BodyInitApp> with WindowListener {
   final TextEditingController _textControllerFile = TextEditingController();
   List<List<String>> listData = [];
   bool _isNotClickAble = false;
+  bool? _lastState = false;
   var fileExcelPath = '';
-
-  // ??
+// ??
   @override
   void initState() {
-    windowManager.addListener(this);
-    _init();
+    if (!Navigator.canPop(context)) {
+      windowManager.addListener(this);
+      _lastState = false;
+      _init();
+    }
     super.initState();
   }
 
-  @override
-  void dispose() {
-    windowManager.removeListener(this);
-    super.dispose();
-  }
+// ??
 
   void _init() async {
-    // Add this line to override the default close handler
     await windowManager.setPreventClose(true);
     setState(() {});
   }
 
   @override
   void onWindowClose() async {
-    bool _isPreventClose = await windowManager.isPreventClose();
-    if (_isPreventClose) {
+    bool isPreventClose = await windowManager.isPreventClose();
+    if (_lastState != true && isPreventClose) {
+      _lastState = true;
       showDialog(
         context: context,
         builder: (_) {
           return AlertDialog(
-            title: Text('آیا می خواهید برنامه را ببندید؟'),
+            title: const Text(
+              'آیا می خواهید برنامه را ببندید؟',
+              style: TextStyle(fontSize: 25),
+              textAlign: TextAlign.right,
+            ),
             actions: [
               TextButton(
-                child: Text('نه'),
+                child: const Text(
+                  'نه',
+                  style: TextStyle(fontSize: 20, color: Colors.green),
+                  textAlign: TextAlign.right,
+                ),
                 onPressed: () {
+                  _lastState = false;
                   Navigator.of(context).pop();
                 },
               ),
               TextButton(
-                child: Text('بله'),
+                child: const Text(
+                  'بله',
+                  style: TextStyle(fontSize: 20, color: Colors.red),
+                  textAlign: TextAlign.right,
+                ),
                 onPressed: () async {
                   Navigator.of(context).pop();
                   await windowManager.destroy();
@@ -74,7 +86,8 @@ class _BodyInitAppState extends State<BodyInitApp> with WindowListener {
     }
   }
 
-  // ??
+// ??
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -83,7 +96,7 @@ class _BodyInitAppState extends State<BodyInitApp> with WindowListener {
         filePicker(),
         listData.isNotEmpty
             ? DesginedTable(
-                Datas: listData,
+                files: listData,
               )
             : Container(
                 color: Colors.white.withOpacity(.2),
@@ -95,7 +108,7 @@ class _BodyInitAppState extends State<BodyInitApp> with WindowListener {
                   ),
                 ),
               ),
-        listData.isNotEmpty ? Details(datas: listData) : const SizedBox(),
+        listData.isNotEmpty ? Details(files: listData) : const SizedBox(),
       ],
     );
   }
@@ -139,12 +152,15 @@ class _BodyInitAppState extends State<BodyInitApp> with WindowListener {
     setState(() {});
     _isNotClickAble = true;
     FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.any,
+      type: FileType.custom,
       allowedExtensions: ['xlsx'],
     );
-    if (result == null) return;
     setState(() {});
     _isNotClickAble = false;
+    if (result == null) {
+      return;
+    }
+
     String file = result.files.single.path.toString();
 
     _textControllerFile.text = file.toString();

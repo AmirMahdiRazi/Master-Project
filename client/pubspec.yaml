@@ -49,6 +49,7 @@ dependencies:
   plugin_wifi_connect: ^1.0.2
   check_vpn_connection: ^0.0.2
   device_info_plus: ^8.0.0
+  
   # device_information: ^0.0.4
   # connectivity_plus: ^3.0.2
   

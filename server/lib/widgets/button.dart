@@ -9,22 +9,22 @@ class DesignedAnimatedButton extends StatelessWidget {
       required this.onPress,
       this.height = 50,
       this.width = 120,
-      this.borderRadius = 0,
       this.fSize = 25,
       this.fontFamily = 'bnazanin',
+      this.bRadius = 30.0,
       this.duration = 500});
   final String text;
   final VoidCallback onPress;
   final double height;
   final double width;
-  final double borderRadius;
+  final double bRadius;
   final double fSize;
   final String fontFamily;
   final int duration;
   @override
   Widget build(BuildContext context) {
     return AnimatedButton(
-      borderRadius: borderRadius,
+      borderRadius: bRadius,
       onPress: () async {
         await Future.delayed(Duration(milliseconds: 505));
         onPress();

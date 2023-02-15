@@ -39,12 +39,11 @@ class TextandTextField extends StatelessWidget {
               textInputAction: TextInputAction.next,
               textAlign: TextAlign.center,
               controller: textEditingController,
-              style: const TextStyle(fontSize: 25, fontFamily: 'shadow'),
+              style: const TextStyle(fontSize: 25),
               decoration: InputDecoration(
                 errorText: error,
                 helperStyle: TextStyle(
                     fontSize: count == 1 ? 25 : 20,
-                    fontFamily: 'shadow',
                     fontWeight: FontWeight.w600),
                 contentPadding: const EdgeInsets.symmetric(
                     vertical: 10.0, horizontal: 15.0),

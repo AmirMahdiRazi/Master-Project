@@ -9,14 +9,14 @@ class DesignAnimatedTextKit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedTextKit(
+      totalRepeatCount: 10,
       repeatForever: true,
-      pause: const Duration(seconds: 3),
       animatedTexts: [
         ColorizeAnimatedText(
           text,
           textDirection: TextDirection.rtl,
           textAlign: TextAlign.right,
-          speed: const Duration(seconds: 4),
+          speed: const Duration(seconds: 2),
           textStyle: TextStyle(
             fontSize: fontsize,
             fontFamily: 'bnazanin',
@@ -32,7 +32,7 @@ class DesignAnimatedTextKit extends StatelessWidget {
           text,
           textDirection: TextDirection.rtl,
           textAlign: TextAlign.right,
-          speed: const Duration(seconds: 4),
+          speed: const Duration(seconds: 2),
           textStyle: TextStyle(
             fontSize: fontsize,
             fontFamily: 'bnazanin',
@@ -45,31 +45,6 @@ class DesignAnimatedTextKit extends StatelessWidget {
           ],
         ),
       ],
-    );
-  }
-}
-
-class TextAnimationFilicker extends StatelessWidget {
-  const TextAnimationFilicker({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 100,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: AnimatedTextKit(
-          repeatForever: true,
-          pause: const Duration(milliseconds: 100),
-          animatedTexts: [
-            FlickerAnimatedText(
-                'لطفا فایل دارای حداکثر 4 ستون باشد(نام، نام خانوادگی ، شماره دانشجویی)',
-                textStyle:
-                    const TextStyle(fontFamily: "bnazanin", fontSize: 30),
-                speed: const Duration(seconds: 10)),
-          ],
-        ),
-      ),
     );
   }
 }

@@ -24,63 +24,25 @@ class _AttendanceState extends State<Attendance> with WindowListener {
 
   @override
   void initState() {
-    windowManager.addListener(this);
-    _init();
     Timer.periodic(const Duration(seconds: 10), (timer) {
-      if (Server().serverstatus == ServerStatuses.teminate) {
+      if (Server().running &&
+          Server().serverstatus == ServerStatuses.teminate) {
         setState(() {
           positive = true;
         });
         dialog();
       }
     });
+
     super.initState();
   }
 
   @override
   void dispose() {
     if (Server().running) Server().stopManual();
-    windowManager.removeListener(this);
+
     super.dispose();
   }
-
-// ??
-  void _init() async {
-    // Add this line to override the default close handler
-    await windowManager.setPreventClose(true);
-    setState(() {});
-  }
-
-  @override
-  void onWindowClose() async {
-    bool _isPreventClose = await windowManager.isPreventClose();
-    if (_isPreventClose) {
-      showDialog(
-        context: context,
-        builder: (_) {
-          return AlertDialog(
-            title: Text('آیا می خواهید برنامه را ببندید؟'),
-            actions: [
-              TextButton(
-                child: Text('نه'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: Text('بله'),
-                onPressed: () async {
-                  Navigator.of(context).pop();
-                  await windowManager.destroy();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-// ??
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +55,6 @@ class _AttendanceState extends State<Attendance> with WindowListener {
             Text("جلسه:${Course().numberMeeting}"),
             Text(
               "IP:Port = ${Server().ip}:${Server().port}",
-              style: kstyleNumber,
             )
           ],
         ),
@@ -129,7 +90,6 @@ class _AttendanceState extends State<Attendance> with WindowListener {
                   positive = !Server().running;
                 });
               } catch (e) {
-                print(e);
                 dialog();
               }
             },

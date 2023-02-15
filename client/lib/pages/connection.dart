@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:isolate';
 
 import 'package:check_vpn_connection/check_vpn_connection.dart';
+import 'package:client/backgroundwidget.dart';
 import 'package:client/pages/qrcodescanner.dart';
 // import 'package:client/pages/wifi_connection.dart';
 import 'package:flutter/material.dart';
@@ -38,13 +39,15 @@ class _ConnectionPageState extends State<ConnectionPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-        valueListenable: _statusChecker,
-        builder: ((context, value, child) {
-          return mapEquals(value, {"Wifi": "on", "Vpn": "off"})
-              ? const QRCodeScanner()
-              : const Enable_Wifi();
-        }));
+    return BackgroundWidget(
+      child: ValueListenableBuilder(
+          valueListenable: _statusChecker,
+          builder: ((context, value, child) {
+            return !mapEquals(value, {"Wifi": "on", "Vpn": "off"})
+                ? const Enable_Wifi()
+                : const QRCodeScanner();
+          })),
+    );
   }
 
   void checkWifi() async {

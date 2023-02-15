@@ -62,7 +62,6 @@ class _WifiPageState extends State<WifiPage> {
                 ),
                 DesignedTextField(
                   name: 'پسورد(Password)',
-                  label: 'Password',
                   help: 'Password',
                   pass: true,
                   textEditingController: widget.textControllerPassword,
@@ -80,7 +79,6 @@ class _WifiPageState extends State<WifiPage> {
                   child: DesignedAnimatedButton(
                       fontFamily: '',
                       fSize: 40,
-                      borderRadius: 30,
                       text: wifiIP ?? "error",
                       width: 300,
                       height: 100,

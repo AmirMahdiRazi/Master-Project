@@ -1,29 +1,45 @@
-import 'package:flutter/material.dart';
+import 'dart:ui';
 
-class BackgroundWidget extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
+
+class BackgroundWidget extends StatefulWidget {
   const BackgroundWidget({Key? key, this.child}) : super(key: key);
   final child;
+
+  @override
+  State<BackgroundWidget> createState() => _BackgroundWidgetState();
+}
+
+class _BackgroundWidgetState extends State<BackgroundWidget> {
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color.fromARGB(255, 0, 110, 129),
-                  Color.fromARGB(255, 5, 141, 1),
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            RotatedBox(
+              quarterTurns: 45,
+              child: Lottie.asset('assets/background.json'),
             ),
-          ),
-          Container(
-            child: child,
-          )
-        ],
+            ClipRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(
+                  sigmaX: 5.0,
+                  sigmaY: 5.0,
+                ),
+                child: widget.child,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
