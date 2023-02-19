@@ -1,8 +1,9 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables
+
 import 'package:client/variable.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class DesignedAnimatedButton extends StatelessWidget {
   const DesignedAnimatedButton({
@@ -26,12 +27,12 @@ class DesignedAnimatedButton extends StatelessWidget {
       height: height,
       width: width,
       text: text,
-      gradient: LinearGradient(colors: [
+      gradient: const LinearGradient(colors: [
         Color.fromARGB(139, 0, 253, 0),
         Color.fromARGB(137, 0, 255, 242)
       ]),
-      selectedGradientColor:
-          LinearGradient(colors: [Colors.pinkAccent, Colors.purpleAccent]),
+      selectedGradientColor: const LinearGradient(
+          colors: [Colors.pinkAccent, Colors.purpleAccent]),
       isReverse: true,
       selectedTextColor: Colors.black,
       transitionType: TransitionType.LEFT_CENTER_ROUNDER,

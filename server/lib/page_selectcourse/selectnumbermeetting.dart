@@ -51,7 +51,9 @@ class _SelectNumberMeettingState extends State<SelectNumberMeetting> {
                   textEditingController: textEditingController,
                   def: (value) {
                     setState(() {});
-                    if (value.isNotEmpty && int.parse(value) <= 32) {
+                    if (value.isNotEmpty &&
+                        int.parse(value) <= 32 &&
+                        int.parse(value) >= 1) {
                       _isNotClieckAble = false;
                     } else {
                       _isNotClieckAble = true;

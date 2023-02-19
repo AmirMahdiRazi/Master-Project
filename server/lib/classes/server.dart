@@ -4,8 +4,10 @@ import 'dart:io';
 
 import 'dart:typed_data';
 
+import 'package:encrypt/encrypt.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:server/classes/courseandstudent.dart';
+import 'package:server/classes/rsa.dart';
 
 import 'package:server/constrant.dart';
 
@@ -17,6 +19,7 @@ class Server {
   }
 
   Server._internal();
+  Rsa rsa = Rsa();
   late String ip, user, pass, code;
   late int port;
   ServerSocket? _serverSocket;
@@ -68,7 +71,7 @@ class Server {
           handleConnection(event);
         });
       } catch (e) {
-        print('e');
+        // Do noting its meaning keep moving
       }
     });
   }
@@ -91,18 +94,23 @@ class Server {
 
     client.listen(
       (Uint8List data) {
-        final message = String.fromCharCodes(data);
+        final encryptedData = String.fromCharCodes(data);
+
+        final message = rsa.decrypt(encryptedData);
         print(message);
+        print("1");
         String result = '';
         _clients.add(client);
         if (message.split('-').length == 3) {
+          print("2");
           List temp = message.split('-');
+          print(temp);
           String id = temp[0];
           String codeClient = temp[1];
           String studentNumber = temp[2];
+
           if (codeClient != code) {
             result = '{"result": "100"}'; // ?? Code Expaier
-
           } else {
             for (int i = 0; i < Course().students.length; i++) {
               if (Course().students[i].stdNumber == studentNumber) {
@@ -143,9 +151,11 @@ class Server {
             if (result.isEmpty) {
               result = '{"result": "400"}'; // ?? Student Number Not Found
             }
-
-            client.write(result);
           }
+          print(result);
+          String data = rsa.encrypt(result);
+          print(data);
+          client.write(data);
         }
 
         logs.add('$message -> $result');

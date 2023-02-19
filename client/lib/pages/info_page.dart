@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types, non_constant_identifier_names
+
 import 'package:client/widgets/animatedbutton.dart';
 
 import 'package:client/widgets/checkboxlisttile.dart';
@@ -22,15 +24,10 @@ class _HomePageState extends State<Info_Page> with TickerProviderStateMixin {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   late Future<String> _stdNumber;
   String result_saveOnDisk = '';
-  late final AnimationController _controller;
   @override
   void initState() {
     intallizer();
     super.initState();
-  }
-
-  void dispose() {
-    super.dispose();
   }
 
   @override
@@ -38,7 +35,7 @@ class _HomePageState extends State<Info_Page> with TickerProviderStateMixin {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
+        SizedBox(
           height: 150,
           child: Lottie.asset(
             'assets/account-box.json',
@@ -46,13 +43,13 @@ class _HomePageState extends State<Info_Page> with TickerProviderStateMixin {
             repeat: false,
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 15,
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 50),
           child: TextFormField(
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
             textAlign: TextAlign.right,
             controller: controllerStdNum,
             textDirection: TextDirection.rtl,
@@ -83,7 +80,7 @@ class _HomePageState extends State<Info_Page> with TickerProviderStateMixin {
                   TransferData().client.stdNumber = controllerStdNum.text;
                   checked();
                   isCheck ? readOnDisk() : null;
-                  Future.delayed(Duration(milliseconds: 501), () {
+                  Future.delayed(const Duration(milliseconds: 501), () {
                     Navigator.pushNamed(context, '/first');
                   });
                 },

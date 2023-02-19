@@ -1,6 +1,6 @@
-import 'dart:async';
+// ignore_for_file: camel_case_types
 
-import 'dart:isolate';
+import 'dart:async';
 
 import 'package:check_vpn_connection/check_vpn_connection.dart';
 import 'package:client/backgroundwidget.dart';
@@ -8,8 +8,6 @@ import 'package:client/pages/qrcodescanner.dart';
 // import 'package:client/pages/wifi_connection.dart';
 import 'package:flutter/material.dart';
 import 'package:open_settings/open_settings.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:plugin_wifi_connect/plugin_wifi_connect.dart';
 import 'package:wifi_iot/wifi_iot.dart';
 import 'package:flutter/foundation.dart';
 
@@ -106,7 +104,7 @@ class _Enable_WifiState extends State<Enable_Wifi> {
                           OpenSettings.openWirelessSetting();
                         }),
                   ),
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                   Visibility(
                     visible: value["Vpn"] == 'on',
                     child: ChangeStatus(
@@ -138,7 +136,7 @@ class _ChangeStatusState extends State<ChangeStatus> {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.only(bottom: 25.0),
+          padding: const EdgeInsets.only(bottom: 25.0),
           child: Text(widget.description),
         ),
         const SizedBox(

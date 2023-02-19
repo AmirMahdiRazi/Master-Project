@@ -51,8 +51,14 @@ class _AttendanceState extends State<Attendance> with WindowListener {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Text("نام درس:${Course().courseName}"),
-            Text("جلسه:${Course().numberMeeting}"),
+            Text(
+              "نام درس : ${Course().courseName}",
+              textDirection: TextDirection.ltr,
+            ),
+            Text(
+              "${Course().numberMeeting} : جلسه",
+              textDirection: TextDirection.rtl,
+            ),
             Text(
               "IP:Port = ${Server().ip}:${Server().port}",
             )

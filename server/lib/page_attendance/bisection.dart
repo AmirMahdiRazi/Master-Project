@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:server/classes/courseandstudent.dart';
-import 'package:server/constrant.dart';
 
 import 'package:server/page_attendance/qrcode.dart';
 
@@ -45,7 +44,7 @@ class _BisectionState extends State<Bisection> {
                         semanticContainer: true,
                         margin: const EdgeInsets.all(10),
                         child: Container(
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             gradient: LinearGradient(colors: [
                               Color.fromARGB(255, 9, 161, 167),
                               Color.fromARGB(255, 4, 167, 53)
@@ -58,15 +57,15 @@ class _BisectionState extends State<Bisection> {
                             leading: CircleAvatar(
                               child: Text(
                                 Course().studentsPresent[index].index,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 25,
                                 ),
                               ),
                             ),
                             title: Text(
                               '${Course().studentsPresent[index].fName} ${Course().studentsPresent[index].lName}',
-                              style:
-                                  TextStyle(fontSize: 30, color: Colors.white),
+                              style: const TextStyle(
+                                  fontSize: 30, color: Colors.white),
                             ),
                             trailing: FittedBox(
                               fit: BoxFit.contain,
@@ -74,7 +73,7 @@ class _BisectionState extends State<Bisection> {
                                 children: [
                                   Text(
                                     Course().studentsPresent[index].stdNumber,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 30, color: Colors.white),
                                   ),
                                   const SizedBox(
@@ -82,7 +81,7 @@ class _BisectionState extends State<Bisection> {
                                   ),
                                   Text(
                                     Course().studentsPresent[index].time!,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 30, color: Colors.white),
                                   ),
                                   const SizedBox(
@@ -90,7 +89,7 @@ class _BisectionState extends State<Bisection> {
                                   ),
                                   Text(
                                     Course().studentsPresent[index].day!,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 30, color: Colors.white),
                                   ),
                                   const SizedBox(
@@ -98,7 +97,7 @@ class _BisectionState extends State<Bisection> {
                                   ),
                                   Text(
                                     Course().studentsPresent[index].date!,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 30, color: Colors.white),
                                   ),
                                 ],

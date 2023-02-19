@@ -25,5 +25,5 @@ const kTextFieldDecoration = InputDecoration(
 
 TextStyle kAnimatedButton = GoogleFonts.nunito(
     fontSize: 20,
-    color: Color.fromARGB(255, 255, 255, 255),
+    color: const Color.fromARGB(255, 255, 255, 255),
     fontWeight: FontWeight.w300);

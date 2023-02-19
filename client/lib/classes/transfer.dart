@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:client/classes/rsa.dart';
 import 'package:plugin_wifi_connect/plugin_wifi_connect.dart';
 
 import 'client_class.dart';
@@ -15,6 +16,7 @@ class TransferData {
   Client client = Client();
 
   late Stream stream;
+  Rsa rsa = Rsa();
 
   void transferDataWifi() async {
     try {
@@ -26,7 +28,9 @@ class TransferData {
 
       socket.listen(
         (Uint8List data) {
-          final serverResponse = String.fromCharCodes(data);
+          final encryptResponse = String.fromCharCodes(data);
+          final serverResponse = rsa.decrypt(encryptResponse);
+          print(serverResponse);
           client.logs.add("Response: $serverResponse");
           if (serverResponse.contains('{')) {
             var res = json.decode(serverResponse);
@@ -35,7 +39,6 @@ class TransferData {
               'result': res["result"],
             };
             stream;
-
             socket.close();
             PluginWifiConnect.disconnect();
           }
@@ -49,12 +52,8 @@ class TransferData {
           socket.destroy();
         },
       );
-
-      socket.write(client.combine_data());
-      Future.delayed(Duration(seconds: 7), () {
-        socket.close();
-        client.result = null;
-      });
+      String data = rsa.encrypt(client.combine_data());
+      socket.write(data);
     } catch (e) {
       client.result = {'result': 'Server Offline'};
       stream;

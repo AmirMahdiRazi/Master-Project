@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
+// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api, unused_element
 
 import 'dart:async';
 import 'dart:io';
@@ -47,14 +47,15 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
     super.dispose();
   }
 
-  @override
-  void reassemble() {
-    super.reassemble();
-    if (Platform.isAndroid) {
-      controller!.pauseCamera();
-    }
-    controller!.resumeCamera();
-  }
+  // @override
+  // void reassemble() {
+  //   super.reassemble();
+  //   if (Platform.isAndroid) {
+  //     controller!.pauseCamera();
+  //   }
+  //   controller!.resumeCamera();
+  //   setState(() {});
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +116,7 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
                   }),
             ),
             Visibility(
-              visible: _pause,
+              visible: true,
               child: IconButton(
                 onPressed: () {
                   controller!.resumeCamera();
@@ -152,11 +153,14 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
       controller.scannedDataStream.listen(
         (barcode) => setState(
           (() {
-            if (barcode.code != null &&
-                barcode.code!.toString().split('-').length == 5) {
-              controller.pauseCamera();
+            String decrypted =
+                TransferData().rsa.decrypt(barcode.code.toString());
+            print(decrypted);
+            bool isValid = decrypted.split('-').length == 5;
 
-              List<String> data = dataExtraction(barcode.code!);
+            if (barcode.code != null && isValid) {
+              controller.pauseCamera();
+              List<String> data = dataExtraction(decrypted);
 
               TransferData().client.ipServer = data[2];
               TransferData().client.port = int.parse(data[3]);
@@ -205,7 +209,7 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
   }
 
   void status() async {
-    showDialog(
+    return showDialog(
       barrierDismissible: false,
       context: context,
       builder: ((context) {
@@ -234,7 +238,9 @@ class _DialogState extends State<Dialog> {
 
   Stream<String> get getStream async* {
     if (TransferData().client.result != null) {
+      // * Server send Data
       if (TransferData().client.result!["result"] == '200') {
+        // ?? Successful
         Navigator.of(context).pop();
         Navigator.pushNamedAndRemoveUntil(
             context, '/second', ((route) => false));
@@ -255,21 +261,20 @@ class _DialogState extends State<Dialog> {
             _description =
                 ' مشکلی پیش آمده(لطفا به استاد بگویید فایل را ببندند.) و دوباره تلاش کنید.';
             break;
-          case '600': // ?? Can Not Write on Excel File
+          case '600': // ?? duplicated ID
             _description = 'مشکلی پیش آمده، به استاد اطلاع دهید.  ';
             break;
           default:
             {
-              _description = 'سرور در دسترس نیست';
+              _description = 'مشکلی پیش آمده.';
             }
             break;
         }
-        print(_result);
         TransferData().client.result = null;
-
         yield _description ?? "error";
       } else {
         _description = 'لطفا دوباره تلاش کنید';
+
         yield _description ?? "error";
       }
     }

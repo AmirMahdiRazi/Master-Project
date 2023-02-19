@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 List<Widget> widgets = [
-  Icon(Icons.abc),
-  Icon(Icons.access_alarm),
-  Icon(Icons.access_time_filled_rounded)
+  const Icon(Icons.abc),
+  const Icon(Icons.access_alarm),
+  const Icon(Icons.access_time_filled_rounded)
 ];
 
 class Temp extends StatefulWidget {
@@ -39,8 +39,8 @@ class _TempState extends State<Temp> with SingleTickerProviderStateMixin {
       body: Stack(
         children: [
           TabBarView(
-            children: widgets,
             controller: controller,
+            children: widgets,
           ),
           Positioned(
             bottom: 40,
@@ -58,7 +58,7 @@ class _TempState extends State<Temp> with SingleTickerProviderStateMixin {
               (_index != widgets.length - 1) ? _index++ : _index = 0;
               controller.animateTo(_index);
             },
-            child: Icon(Icons.navigate_next),
+            child: const Icon(Icons.navigate_next),
           )
         ],
       ),

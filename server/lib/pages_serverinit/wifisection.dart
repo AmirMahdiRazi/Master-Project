@@ -5,7 +5,6 @@ import 'package:network_info_plus/network_info_plus.dart';
 import 'package:server/constrant.dart';
 import 'package:server/widgets/button.dart';
 import 'package:server/pages_serverinit/textfield.dart';
-import 'package:server/classes/base.dart';
 import 'package:server/classes/server.dart';
 
 // ignore: must_be_immutable

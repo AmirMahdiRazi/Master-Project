@@ -26,7 +26,7 @@ class DesignedAnimatedButton extends StatelessWidget {
     return AnimatedButton(
       borderRadius: bRadius,
       onPress: () async {
-        await Future.delayed(Duration(milliseconds: 505));
+        await Future.delayed(const Duration(milliseconds: 505));
         onPress();
       },
       animationDuration: Duration(milliseconds: duration),

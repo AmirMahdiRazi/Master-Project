@@ -21,9 +21,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light(),
       initialRoute: '/',
       routes: {
-        '/': (context) => BackgroundWidget(child: Info_Page()),
-        '/first': (context) => ConnectionPage(),
-        '/second': (context) => Success(),
+        '/': (context) => const BackgroundWidget(child: Info_Page()),
+        '/first': (context) => const ConnectionPage(),
+        '/second': (context) => const Success(),
       },
     );
   }
