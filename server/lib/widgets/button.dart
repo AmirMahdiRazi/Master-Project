@@ -3,7 +3,7 @@ import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:flutter/material.dart';
 
 class DesignedAnimatedButton extends StatelessWidget {
-  const DesignedAnimatedButton(
+  DesignedAnimatedButton(
       {super.key,
       required this.text,
       required this.onPress,
@@ -21,31 +21,39 @@ class DesignedAnimatedButton extends StatelessWidget {
   final double fSize;
   final String fontFamily;
   final int duration;
+  bool _isNotClickAble = false;
   @override
   Widget build(BuildContext context) {
-    return AnimatedButton(
-      borderRadius: bRadius,
-      onPress: () async {
-        await Future.delayed(const Duration(milliseconds: 505));
-        onPress();
-      },
-      animationDuration: Duration(milliseconds: duration),
-      height: height,
-      width: width,
-      text: text,
-      textStyle: TextStyle(
-          fontWeight: FontWeight.w600, fontSize: fSize, fontFamily: fontFamily),
-      gradient: const LinearGradient(colors: [
-        Color.fromARGB(139, 0, 253, 0),
-        Color.fromARGB(137, 0, 255, 242)
-      ]),
-      selectedGradientColor: const LinearGradient(
-          colors: [Colors.pinkAccent, Colors.purpleAccent]),
-      isReverse: true,
-      selectedTextColor: Colors.black,
-      transitionType: TransitionType.LEFT_CENTER_ROUNDER,
-      borderColor: Colors.white,
-      borderWidth: 1,
+    return AbsorbPointer(
+      absorbing: _isNotClickAble,
+      child: AnimatedButton(
+        borderRadius: bRadius,
+        onPress: () async {
+          _isNotClickAble = true;
+          await Future.delayed(const Duration(milliseconds: 505));
+          onPress();
+          _isNotClickAble = false;
+        },
+        animationDuration: Duration(milliseconds: duration),
+        height: height,
+        width: width,
+        text: text,
+        textStyle: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: fSize,
+            fontFamily: fontFamily),
+        gradient: const LinearGradient(colors: [
+          Color.fromARGB(139, 0, 253, 0),
+          Color.fromARGB(137, 0, 255, 242)
+        ]),
+        selectedGradientColor: const LinearGradient(
+            colors: [Colors.pinkAccent, Colors.purpleAccent]),
+        isReverse: true,
+        selectedTextColor: Colors.black,
+        transitionType: TransitionType.LEFT_CENTER_ROUNDER,
+        borderColor: Colors.white,
+        borderWidth: 1,
+      ),
     );
   }
 }

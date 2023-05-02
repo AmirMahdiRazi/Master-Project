@@ -31,6 +31,8 @@ class _WifiPageState extends State<WifiPage> {
     Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_stop) timer.cancel();
       _ips();
+      setState(() {});
+      
     });
 
     super.initState();
@@ -100,7 +102,7 @@ class _WifiPageState extends State<WifiPage> {
               // ignore: prefer_const_literals_to_create_immutables
               children: [
                 const Text(
-                  "لطفا Wifi را روشن کنید.",
+                  "لطفا به یک Wifi متصل شوید.",
                   textDirection: TextDirection.rtl,
                   style: TextStyle(fontFamily: "bnazanin", fontSize: 30),
                 ),
@@ -124,6 +126,7 @@ class _WifiPageState extends State<WifiPage> {
       } else {
         return false;
       }
+      
     } catch (e) {
       return false;
     }

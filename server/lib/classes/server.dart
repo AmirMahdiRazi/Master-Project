@@ -1,14 +1,9 @@
 import 'dart:async';
-
 import 'dart:io';
-
 import 'dart:typed_data';
-
-import 'package:encrypt/encrypt.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:server/classes/courseandstudent.dart';
 import 'package:server/classes/rsa.dart';
-
 import 'package:server/constrant.dart';
 
 class Server {
@@ -31,7 +26,7 @@ class Server {
   final List<Socket> _clients = [];
 
   void _checkServer() {
-    Timer.periodic(const Duration(seconds: 10), (timer) async {
+    Timer.periodic(const Duration(seconds: 3), (timer) async {
       if (_runChecker == false) {
         timer.cancel();
       } else {
@@ -40,9 +35,9 @@ class Server {
             ip,
             port,
             timeout: const Duration(seconds: 5),
-          ).then((value) => value.close());
+          );
         } catch (e) {
-          _stop();
+          stopManual();
           serverstatus = ServerStatuses.teminate;
           timer.cancel();
         }
@@ -64,7 +59,6 @@ class Server {
         _serverSocket = await ServerSocket.bind(ip, port);
         running = true;
         _runChecker = true;
-
         _checkServer();
         logs.add("Server is running on : $ip:$port");
         _serverSocket!.listen((Socket event) {
@@ -77,7 +71,9 @@ class Server {
   }
 
   void stopManual() {
-    _stop();
+    _serverSocket = null;
+    running = false;
+    _runChecker = false;
   }
 
   void _stop() {
@@ -95,20 +91,14 @@ class Server {
     client.listen(
       (Uint8List data) {
         final encryptedData = String.fromCharCodes(data);
-
         final message = rsa.decrypt(encryptedData);
-        print(message);
-        print("1");
         String result = '';
         _clients.add(client);
         if (message.split('-').length == 3) {
-          print("2");
           List temp = message.split('-');
-          print(temp);
           String id = temp[0];
           String codeClient = temp[1];
           String studentNumber = temp[2];
-
           if (codeClient != code) {
             result = '{"result": "100"}'; // ?? Code Expaier
           } else {
@@ -121,16 +111,8 @@ class Server {
                       .any((element) => element == true);
                   if (!exsistId || Course().studentsPresent.isEmpty) {
                     if (Course().updateExcel(i, id)) {
-                      Course().students[i].statusPresent = '1';
-                      DateTime now = DateTime.now();
-                      Course().students[i].time =
-                          '${now.hour}:${now.minute}:${now.second}';
-                      Course().students[i].day = now.day.toString();
-                      Course().students[i].date =
-                          "${now.year}/${now.month}/${now.day}";
-                      Course().students[i].id = id;
-
-                      Course().studentsPresent.insert(0, Course().students[i]);
+                      // !!
+                      // !!
                       result =
                           '{"result": "200"}'; // ?? Student is in List students and not present
                     } else {
@@ -138,9 +120,14 @@ class Server {
                           '{"result":"500"}'; // ?? Can Not Write on Excel File
                     }
                   } else {
-                    result = '{"result": "600"}'; // ?? duplicate ID
+                    int indexPreviousStd = Course()
+                        .studentsPresent
+                        .map((e) => e.id!.contains(id))
+                        .toList()
+                        .indexOf(true);
+                    result =
+                        '{"result": "600-${Course().studentsPresent[indexPreviousStd].stdNumber}"}'; // ?? duplicate ID
                   }
-                  ;
                 } else {
                   result =
                       '{"result": "300"}'; // ?? Student is in List students and present
@@ -152,9 +139,7 @@ class Server {
               result = '{"result": "400"}'; // ?? Student Number Not Found
             }
           }
-          print(result);
           String data = rsa.encrypt(result);
-          print(data);
           client.write(data);
         }
 

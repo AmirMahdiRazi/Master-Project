@@ -31,7 +31,7 @@ class _ConnectionPageState extends State<ConnectionPage> {
 
   @override
   void dispose() {
-    _statusChecker.dispose();
+    // _statusChecker.dispose();
     super.dispose();
   }
 
@@ -42,7 +42,7 @@ class _ConnectionPageState extends State<ConnectionPage> {
           valueListenable: _statusChecker,
           builder: ((context, value, child) {
             return !mapEquals(value, {"Wifi": "on", "Vpn": "off"})
-                ? const Enable_Wifi()
+                ? const WifiandVpnChecker()
                 : const QRCodeScanner();
           })),
     );
@@ -73,14 +73,14 @@ class _ConnectionPageState extends State<ConnectionPage> {
   }
 }
 
-class Enable_Wifi extends StatefulWidget {
-  const Enable_Wifi({super.key});
+class WifiandVpnChecker extends StatefulWidget {
+  const WifiandVpnChecker({super.key});
 
   @override
-  State<Enable_Wifi> createState() => _Enable_WifiState();
+  State<WifiandVpnChecker> createState() => _WifiandVpnCheckerState();
 }
 
-class _Enable_WifiState extends State<Enable_Wifi> {
+class _WifiandVpnCheckerState extends State<WifiandVpnChecker> {
   @override
   @override
   Widget build(BuildContext context) {

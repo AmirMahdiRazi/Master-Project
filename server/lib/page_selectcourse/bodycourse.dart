@@ -1,11 +1,8 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:server/classes/courseandstudent.dart';
-
 import 'package:server/classes/base.dart';
 import 'package:server/page_selectcourse/selectcourse.dart';
 import 'package:server/page_selectcourse/selectnumbermeetting.dart';

@@ -50,10 +50,30 @@ dependencies:
   check_vpn_connection: ^0.0.2
   device_info_plus: ^8.0.0
   encrypt: ^5.0.1
+  flutter_native_splash: ^2.2.18
+  
+  
   # device_information: ^0.0.4
   # connectivity_plus: ^3.0.2
-  
 
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon_image.png"
+  min_sdk_android: 21 
+  remove_alpha_ios: true
+  
+flutter_native_splash:
+  android: true
+  ios: true
+  web: false
+  # color: "#056955"
+  background_image: assets/background_splash.png
+  image: assets/splash.png
+# flutter clean
+# flutter pub get
+#flutter pub run flutter_native_splash:create
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -64,7 +84,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
-
+  flutter_launcher_icons: ^0.12.0
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

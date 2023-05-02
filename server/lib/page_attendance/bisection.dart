@@ -12,7 +12,7 @@ class Bisection extends StatefulWidget {
 
 class _BisectionState extends State<Bisection> {
   int index = 0;
-  double padValue_right = 200, padValue_left = 0;
+  double padValue_right = 300, padValue_left = 0;
   late String code;
   int time = 0;
   @override
@@ -21,8 +21,7 @@ class _BisectionState extends State<Bisection> {
     super.initState();
   }
 
-  Stream<List<Student>> get listPresentStudent async* {
-    yield Course().studentsPresent;
+  void listPresentStudent() {
     setState(() {});
   }
 
@@ -34,96 +33,92 @@ class _BisectionState extends State<Bisection> {
           padding: EdgeInsets.only(right: padValue_right, left: padValue_left),
           duration: const Duration(seconds: 2),
           curve: Curves.easeInOut,
-          child: StreamBuilder<List<Student>>(
-              stream: listPresentStudent,
-              builder: (context, snapshot) {
-                return ListView.builder(
-                    itemCount: Course().studentsPresent.length,
-                    itemBuilder: ((context, index) {
-                      return Card(
-                        semanticContainer: true,
-                        margin: const EdgeInsets.all(10),
-                        child: Container(
-                          decoration: const BoxDecoration(
-                            gradient: LinearGradient(colors: [
-                              Color.fromARGB(255, 9, 161, 167),
-                              Color.fromARGB(255, 4, 167, 53)
-                            ], stops: [
-                              0,
-                              .9
-                            ]),
-                          ),
-                          child: ListTile(
-                            leading: CircleAvatar(
-                              child: Text(
-                                Course().studentsPresent[index].index,
-                                style: const TextStyle(
-                                  fontSize: 25,
-                                ),
-                              ),
-                            ),
-                            title: Text(
-                              '${Course().studentsPresent[index].fName} ${Course().studentsPresent[index].lName}',
-                              style: const TextStyle(
-                                  fontSize: 30, color: Colors.white),
-                            ),
-                            trailing: FittedBox(
-                              fit: BoxFit.contain,
-                              child: Row(
-                                children: [
-                                  Text(
-                                    Course().studentsPresent[index].stdNumber,
-                                    style: const TextStyle(
-                                        fontSize: 30, color: Colors.white),
-                                  ),
-                                  const SizedBox(
-                                    width: 50,
-                                  ),
-                                  Text(
-                                    Course().studentsPresent[index].time!,
-                                    style: const TextStyle(
-                                        fontSize: 30, color: Colors.white),
-                                  ),
-                                  const SizedBox(
-                                    width: 50,
-                                  ),
-                                  Text(
-                                    Course().studentsPresent[index].day!,
-                                    style: const TextStyle(
-                                        fontSize: 30, color: Colors.white),
-                                  ),
-                                  const SizedBox(
-                                    width: 50,
-                                  ),
-                                  Text(
-                                    Course().studentsPresent[index].date!,
-                                    style: const TextStyle(
-                                        fontSize: 30, color: Colors.white),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+          child: ListView.builder(
+            itemCount: Course().studentsPresent.length,
+            itemBuilder: ((context, index) {
+              return Card(
+                semanticContainer: true,
+                margin: const EdgeInsets.all(10),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(colors: [
+                      Color.fromARGB(255, 9, 161, 167),
+                      Color.fromARGB(255, 4, 167, 53)
+                    ], stops: [
+                      0,
+                      .9
+                    ]),
+                  ),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      child: Text(
+                        Course().studentsPresent[index].index,
+                        style: const TextStyle(
+                          fontSize: 25,
                         ),
-                      );
-                    }));
-              }),
+                      ),
+                    ),
+                    title: Text(
+                      '${Course().studentsPresent[index].fName} ${Course().studentsPresent[index].lName}',
+                      style: const TextStyle(fontSize: 30, color: Colors.white),
+                    ),
+                    trailing: FittedBox(
+                      fit: BoxFit.contain,
+                      child: Row(
+                        children: [
+                          Text(
+                            Course().studentsPresent[index].stdNumber,
+                            style: const TextStyle(
+                                fontSize: 30, color: Colors.white),
+                          ),
+                          const SizedBox(
+                            width: 50,
+                          ),
+                          Text(
+                            Course().studentsPresent[index].time!,
+                            style: const TextStyle(
+                                fontSize: 30, color: Colors.white),
+                          ),
+                          const SizedBox(
+                            width: 50,
+                          ),
+                          Text(
+                            Course().studentsPresent[index].day!,
+                            style: const TextStyle(
+                                fontSize: 30, color: Colors.white),
+                          ),
+                          const SizedBox(
+                            width: 50,
+                          ),
+                          Text(
+                            Course().studentsPresent[index].date!,
+                            style: const TextStyle(
+                                fontSize: 30, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }),
+          ),
         ),
         AnimatedPositioned(
           top: index == 0
               ? 0
               : index == 1
-                  ? MediaQuery.of(context).size.height - 258
+                  ? MediaQuery.of(context).size.height - 358
                   : index == 2
-                      ? MediaQuery.of(context).size.height - 258
+                      ? MediaQuery.of(context).size.height - 358
                       : 0,
           right: index == 0
               ? 0
               : index == 1
                   ? 0
                   : index == 2
-                      ? MediaQuery.of(context).size.width - 200
-                      : MediaQuery.of(context).size.width - 200,
+                      ? MediaQuery.of(context).size.width - 300
+                      : MediaQuery.of(context).size.width - 300,
           duration: const Duration(seconds: 2),
           curve: Curves.fastOutSlowIn,
           child: GestureDetector(
@@ -134,16 +129,16 @@ class _BisectionState extends State<Bisection> {
 
               setState(() {
                 if (index == -1 || index == 0) {
-                  padValue_right = 200;
+                  padValue_right = 300;
                   padValue_left = 0;
                 } else {
                   padValue_right = 0;
-                  padValue_left = 200;
+                  padValue_left = 300;
                 }
                 index++;
               });
             },
-            child: QRGenearator(size: 200),
+            child: QRGenearator(size: 300),
           ),
         ),
       ],

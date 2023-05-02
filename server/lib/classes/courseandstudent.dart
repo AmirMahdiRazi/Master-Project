@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:excel/excel.dart';
 import 'package:server/classes/base.dart';
+import 'package:shamsi_date/shamsi_date.dart';
 
 class Student {
   Student(
@@ -36,7 +37,7 @@ class Course {
 
   late String courseName;
   late String numberMeeting;
-  late Stream<List<Student>> def;
+  late Function def;
 
   List<Student> studentsPresent = [], students = [];
 
@@ -83,22 +84,33 @@ class Course {
     var bytes = File(file).readAsBytesSync();
     var excel = Excel.decodeBytes(bytes);
     Sheet sheetObject = excel["booksheet $numberMeeting"];
-    def;
+    def();
     try {
       DateTime now = DateTime.now();
+      Jalali now_jalali = now.toJalali();
+      // !!
+      Course().students[row].statusPresent = '1';
+      Course().students[row].time =
+          '${now_jalali.hour}:${now_jalali.minute}:${now_jalali.second}';
+      Course().students[row].day = now_jalali.day.toString();
+      Course().students[row].date =
+          "${now_jalali.year}/${now_jalali.month}/${now_jalali.day}";
+      Course().students[row].id = id;
+      Course().studentsPresent.insert(0, Course().students[row]);
+      // !!
       sheetObject.updateCell(
-          CellIndex.indexByColumnRow(rowIndex: row, columnIndex: 4), '1');
+          CellIndex.indexByColumnRow(rowIndex: row, columnIndex: 4), Course().students[row].statusPresent);
       sheetObject.updateCell(
           CellIndex.indexByColumnRow(rowIndex: row, columnIndex: 5),
-          '${now.hour}:${now.minute}:${now.second}');
+          Course().students[row].time);
       sheetObject.updateCell(
           CellIndex.indexByColumnRow(rowIndex: row, columnIndex: 6),
-          now.day.toString());
+          Course().students[row].day);
       sheetObject.updateCell(
           CellIndex.indexByColumnRow(rowIndex: row, columnIndex: 7),
-          "${now.year}/${now.month}/${now.day}");
+          Course().students[row].date);
       sheetObject.updateCell(
-          CellIndex.indexByColumnRow(rowIndex: row, columnIndex: 8), id);
+          CellIndex.indexByColumnRow(rowIndex: row, columnIndex: 8), Course().students[row].id);
       var fileBytes = excel.save();
       File fileExcel = File(
           "${Base().path}/Files/${Course().courseName}/${Course().courseName}.xlsx");

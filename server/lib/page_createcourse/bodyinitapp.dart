@@ -1,12 +1,8 @@
 import 'dart:io';
-
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
-
 import 'package:flutter/material.dart';
 import 'package:server/widgets/textkit.dart';
-
 import 'package:server/page_createcourse/Details.dart';
 import 'package:server/page_createcourse/table.dart';
 import 'package:window_manager/window_manager.dart';
@@ -149,13 +145,11 @@ class _BodyInitAppState extends State<BodyInitApp> with WindowListener {
   }
 
   void _pickerFile() async {
-    setState(() {});
     _isNotClickAble = true;
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['xlsx'],
     );
-    setState(() {});
     _isNotClickAble = false;
     if (result == null) {
       return;
@@ -169,16 +163,17 @@ class _BodyInitAppState extends State<BodyInitApp> with WindowListener {
     try {
       var bytes = File(fileExcelPath).readAsBytesSync();
       var excel = Excel.decodeBytes(bytes);
-
+      listData = [];
       for (var row in excel.tables[excel.tables.keys.first]!.rows) {
         listData.add(row.map((e) => e!.value.toString()).toList());
       }
 
-      listData.insert(
-          0, List.generate(listData[0].length, (index) => "ستون: $index"));
+      listData.insert(0,
+          List.generate(listData[0].length, (index) => "ستون: ${index + 1}"));
     } catch (e) {
       dialog();
     }
+    setState(() {});
   }
 
   Future dialog() {

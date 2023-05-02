@@ -1,11 +1,9 @@
 // ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api, unused_element
 
-import 'dart:async';
 import 'dart:io';
 
 import 'package:android_id/android_id.dart';
 import 'package:client/classes/transfer.dart';
-
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -13,9 +11,6 @@ import 'package:plugin_wifi_connect/plugin_wifi_connect.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 bool _pause = false;
-
-String? _result;
-String? _description;
 
 class QRCodeScanner extends StatefulWidget {
   const QRCodeScanner({super.key});
@@ -47,15 +42,15 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
     super.dispose();
   }
 
-  // @override
-  // void reassemble() {
-  //   super.reassemble();
-  //   if (Platform.isAndroid) {
-  //     controller!.pauseCamera();
-  //   }
-  //   controller!.resumeCamera();
-  //   setState(() {});
-  // }
+  @override
+  void reassemble() {
+    super.reassemble();
+    if (Platform.isAndroid) {
+      controller!.pauseCamera();
+    }
+    controller!.resumeCamera();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -155,7 +150,6 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
           (() {
             String decrypted =
                 TransferData().rsa.decrypt(barcode.code.toString());
-            print(decrypted);
             bool isValid = decrypted.split('-').length == 5;
 
             if (barcode.code != null && isValid) {
@@ -230,13 +224,16 @@ class Dialog extends StatefulWidget {
 }
 
 class _DialogState extends State<Dialog> {
+  String _result = "";
+  String _description = "";
+  ValueNotifier<String> respons = ValueNotifier<String>("");
   @override
   void initState() {
-    TransferData().stream = getStream;
+    TransferData().responsServer = getRespons;
     super.initState();
   }
 
-  Stream<String> get getStream async* {
+  void getRespons() {
     if (TransferData().client.result != null) {
       // * Server send Data
       if (TransferData().client.result!["result"] == '200') {
@@ -245,8 +242,7 @@ class _DialogState extends State<Dialog> {
         Navigator.pushNamedAndRemoveUntil(
             context, '/second', ((route) => false));
       } else if (TransferData().client.result!["result"] != '200') {
-        _result = TransferData().client.result!["result"];
-
+        _result = TransferData().client.result!["result"] ?? "empty";
         switch (TransferData().client.result!["result"]) {
           case '100': // ?? Code Expaier
             _description = 'کد منقظی شده است.';
@@ -261,36 +257,45 @@ class _DialogState extends State<Dialog> {
             _description =
                 ' مشکلی پیش آمده(لطفا به استاد بگویید فایل را ببندند.) و دوباره تلاش کنید.';
             break;
-          case '600': // ?? duplicated ID
-            _description = 'مشکلی پیش آمده، به استاد اطلاع دهید.  ';
+
+          case '700': // ?? duplicated ID
+            _description = 'سرور در دسترس نیست.  ';
             break;
           default:
-            {
-              _description = 'مشکلی پیش آمده.';
+            // ?? duplicated ID
+            if (TransferData().client.result!["result"]!.contains("600")) {
+              String previousId =
+                  TransferData().client.result!["result"]!.split("-")[1];
+              _description =
+                  'با این تلفن همراه برای فرد دیگری حاضر زده شده و نمی توان برای شماره دانشجویی دیگر حاضری زد. شماره دانشجویی که قبلا زده شده :${previousId}';
+            } else {
+              _description = "مشکلی پیش آمده است.";
             }
             break;
         }
         TransferData().client.result = null;
-        yield _description ?? "error";
+        // return _description ?? "error";
       } else {
         _description = 'لطفا دوباره تلاش کنید';
-
-        yield _description ?? "error";
+        // return _description ?? "error";
       }
+      respons.value = "newRespons";
+      Future.delayed(Duration(seconds: 5), () {
+        print(respons.value.isNotEmpty);
+      });
     }
-    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Object>(
-        stream: getStream,
-        builder: (context, snapshot) {
+    return ValueListenableBuilder<String>(
+        valueListenable: respons,
+        builder: (context, value, child) {
           return AlertDialog(
-            title: !snapshot.hasData
+            title: value.isEmpty
                 ? const Center(child: CircularProgressIndicator())
                 : null,
-            content: !snapshot.hasData
+            content: value.isEmpty
                 ? const Text(
                     'لطفا صبر کنید',
                     textAlign: TextAlign.center,
@@ -298,14 +303,16 @@ class _DialogState extends State<Dialog> {
                   )
                 : Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        '${_description}',
-                        textDirection: TextDirection.ltr,
-                      ),
-                    ],
+                    children: _description.split(":").length == 2
+                        ? duplicat(_description)
+                        : [
+                            Text(
+                              '${_description}',
+                              textDirection: TextDirection.rtl,
+                            ),
+                          ],
                   ),
-            actions: !snapshot.hasData
+            actions: value.isEmpty
                 ? []
                 : [
                     ElevatedButton(
@@ -313,6 +320,7 @@ class _DialogState extends State<Dialog> {
                         _pause = true;
                         TransferData().client.result = null;
                         widget.controller.resumeCamera();
+                        respons.value = "";
                         Navigator.of(context).pop();
                       },
                       child: const Text(
@@ -324,5 +332,18 @@ class _DialogState extends State<Dialog> {
                   ],
           );
         });
+  }
+
+  List<Widget> duplicat(String _description) {
+    return [
+      Text(_description.split(":")[0], textDirection: TextDirection.rtl),
+      Center(
+        child: Text(
+          _description.split(":")[1],
+          style: TextStyle(
+              color: Colors.red, fontSize: 16, fontWeight: FontWeight.w500),
+        ),
+      ),
+    ];
   }
 }

@@ -63,9 +63,10 @@ class _DetailsState extends State<Details> {
             height: 65,
             text: "ذخیره",
             onPress: () async {
-              int fName = int.parse(_textEditingControllerFName.text),
-                  lName = int.parse(_textEditingControllerLName.text),
-                  stdNumber = int.parse(_textEditingControllerStdNumber.text);
+              int fName = int.parse(_textEditingControllerFName.text) - 1,
+                  lName = int.parse(_textEditingControllerLName.text) - 1,
+                  stdNumber =
+                      int.parse(_textEditingControllerStdNumber.text) - 1;
               List<List<String>> temp;
               int index = 1;
               widget.files.removeAt(0);
@@ -115,12 +116,24 @@ class _DetailsState extends State<Details> {
   }
 
   void checkerInput(String value) {
-    bool fill = _textControllerCourse.text.isNotEmpty &&
-        _textEditingControllerFName.text.isNotEmpty &&
-        _textEditingControllerLName.text.isNotEmpty &&
-        _textEditingControllerStdNumber.text.isNotEmpty;
+    String course = _textControllerCourse.text;
+    String fName = _textEditingControllerFName.text;
+    String lName = _textEditingControllerLName.text;
+    String stdNumber = _textEditingControllerStdNumber.text;
 
-    if (fill) {
+    bool isFillAll = course.isNotEmpty &&
+        fName.isNotEmpty &&
+        lName.isNotEmpty &&
+        stdNumber.isNotEmpty;
+
+    int lenColumn = widget.files[0].length;
+    bool isValidFname=false,isValidLname=false,isValidStdNumber=false;
+    fName.isNotEmpty ? isValidFname = int.parse(fName) - 1 < lenColumn && int.parse(fName) - 1 >= 0 : Null;
+    lName.isNotEmpty ? isValidLname = int.parse(lName) - 1 < lenColumn && int.parse(lName) - 1 >= 0 : Null;
+    stdNumber.isNotEmpty ? isValidStdNumber = int.parse(stdNumber) - 1 < lenColumn && int.parse(stdNumber) - 1 >= 0 : Null;
+
+    bool isValidAll = isValidFname && isValidLname && isValidStdNumber;
+    if (isFillAll && isValidAll) {
       _isNotClickAble = false;
       setState(() {});
     } else {

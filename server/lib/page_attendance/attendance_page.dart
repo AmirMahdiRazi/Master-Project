@@ -24,15 +24,7 @@ class _AttendanceState extends State<Attendance> with WindowListener {
 
   @override
   void initState() {
-    Timer.periodic(const Duration(seconds: 10), (timer) {
-      if (Server().running &&
-          Server().serverstatus == ServerStatuses.teminate) {
-        setState(() {
-          positive = true;
-        });
-        dialog();
-      }
-    });
+    
 
     super.initState();
   }
@@ -43,7 +35,19 @@ class _AttendanceState extends State<Attendance> with WindowListener {
 
     super.dispose();
   }
-
+  void checkStatus()
+  {
+    Timer.periodic(const Duration(seconds: 2), (timer) {
+      if (Server().serverstatus == ServerStatuses.teminate) {
+        setState(() {
+          positive = true;
+        });
+        
+        dialog();
+        timer.cancel();
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,6 +95,7 @@ class _AttendanceState extends State<Attendance> with WindowListener {
                 }
 
                 Server().startOrStop();
+                checkStatus();
                 await Future.delayed(const Duration(seconds: 1));
                 setState(() {
                   positive = !Server().running;
