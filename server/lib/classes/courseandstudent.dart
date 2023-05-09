@@ -41,8 +41,6 @@ class Course {
 
   List<Student> studentsPresent = [], students = [];
 
-  List<String> androidId = [];
-
   void readExcel() {
     Course().students = [];
     Course().studentsPresent = [];
@@ -87,14 +85,14 @@ class Course {
     def();
     try {
       DateTime now = DateTime.now();
-      Jalali now_jalali = now.toJalali();
+      Jalali nowJalali = now.toJalali();
       // !!
       Course().students[row].statusPresent = '1';
       Course().students[row].time =
-          '${now_jalali.hour}:${now_jalali.minute}:${now_jalali.second}';
-      Course().students[row].day = now_jalali.day.toString();
+          '${nowJalali.hour}:${nowJalali.minute}:${nowJalali.second}';
+      Course().students[row].day = nowJalali.day.toString();
       Course().students[row].date =
-          "${now_jalali.year}/${now_jalali.month}/${now_jalali.day}";
+          "${nowJalali.year}/${nowJalali.month}/${nowJalali.day}";
       Course().students[row].id = id;
       Course().studentsPresent.insert(0, Course().students[row]);
       // !!
@@ -124,6 +122,4 @@ class Course {
       return false;
     }
   }
-
-  late String path;
 }

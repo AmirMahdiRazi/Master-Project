@@ -4,8 +4,8 @@ import 'package:client/variable.dart';
 import 'package:client/widgets/animatedtextkit.dart';
 import 'package:flutter/material.dart';
 
-class DesignedCheckboxListTile extends StatefulWidget {
-  const DesignedCheckboxListTile(
+class DesignedCheckBoxListTile extends StatefulWidget {
+  const DesignedCheckBoxListTile(
       {super.key,
       required this.text,
       required this.function,
@@ -15,11 +15,11 @@ class DesignedCheckboxListTile extends StatefulWidget {
   final subTitle;
 
   @override
-  State<DesignedCheckboxListTile> createState() =>
-      _DesignedCheckboxListTileState();
+  State<DesignedCheckBoxListTile> createState() =>
+      _DesignedCheckBoxListTileState();
 }
 
-class _DesignedCheckboxListTileState extends State<DesignedCheckboxListTile> {
+class _DesignedCheckBoxListTileState extends State<DesignedCheckBoxListTile> {
   @override
   Widget build(BuildContext context) {
     return Center(

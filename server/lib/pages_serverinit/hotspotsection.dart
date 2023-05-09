@@ -124,7 +124,7 @@ class _HotspotPageState extends State<HotspotPage> {
                                           isNotClickable = true;
                                           Server().pass =
                                               widget.textControllerPassHot.text;
-                                          Server().user =
+                                          Server().ssid =
                                               widget.textControllerSSIDHot.text;
                                           Server().ip = e.split(": ")[1];
 

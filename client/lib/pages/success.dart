@@ -46,7 +46,7 @@ class _BodyState extends State<Body> {
             fontSize: 20,
             fontWeight: FontWeight.w700,
             fontStyle: FontStyle.italic,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
         Text(
@@ -58,7 +58,7 @@ class _BodyState extends State<Body> {
             fontSize: 20,
             fontWeight: FontWeight.w700,
             fontStyle: FontStyle.italic,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
       ],

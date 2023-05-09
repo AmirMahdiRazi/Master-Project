@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:server/page_createcourse/bodyinitapp.dart';
+import 'package:server/page_createcourse/bodycreatecourse.dart';
 
 class CreateCourse extends StatelessWidget {
   const CreateCourse({super.key});
@@ -34,7 +34,7 @@ class CreateCourse extends StatelessWidget {
           ),
         ),
       ),
-      body: const BodyInitApp(),
+      body: const BodyCreateCourse(),
     );
   }
 }

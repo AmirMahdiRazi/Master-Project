@@ -138,7 +138,7 @@ class _BisectionState extends State<Bisection> {
                 index++;
               });
             },
-            child: QRGenearator(size: 300),
+            child: QRGenerator(size: 300),
           ),
         ),
       ],

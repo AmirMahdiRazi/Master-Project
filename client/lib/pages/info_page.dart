@@ -26,7 +26,7 @@ class _HomePageState extends State<Info_Page> with TickerProviderStateMixin {
   String result_saveOnDisk = '';
   @override
   void initState() {
-    intallizer();
+    initializer();
     super.initState();
   }
 
@@ -87,7 +87,7 @@ class _HomePageState extends State<Info_Page> with TickerProviderStateMixin {
               ),
               Padding(
                 padding: const EdgeInsets.all(25),
-                child: DesignedCheckboxListTile(
+                child: DesignedCheckBoxListTile(
                   text: 'به خاطر بسپار',
                   function: checked,
                   subTitle: result_saveOnDisk,
@@ -115,7 +115,7 @@ class _HomePageState extends State<Info_Page> with TickerProviderStateMixin {
     readOnDisk();
   }
 
-  void intallizer() async {
+  void initializer() async {
     _stdNumber = _prefs.then((SharedPreferences prefs) {
       return prefs.getString('stdNumber') ?? '';
     });

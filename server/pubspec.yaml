@@ -43,8 +43,6 @@ dependencies:
   excel: ^2.0.1
   animated_toggle_switch: ^0.6.1
   network_info_plus: ^3.0.1
-  desktop_window: ^0.4.0
-  lottie: ^2.2.0
   window_manager: ^0.3.0
   encrypt: ^5.0.1
   flutter_launcher_icons: ^0.12.0
@@ -88,8 +86,7 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  assets:
-    - assets/animation/
+  # assets:
     
 
   # An image asset can refer to one or more resolution-specific "variants", see

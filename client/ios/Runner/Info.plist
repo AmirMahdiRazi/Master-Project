@@ -9,6 +9,12 @@
 		</dict>
 		<key>io.flutter.embedded_views_preview</key>
 		<true/>
+		<!--  -->
+		<key>com.apple.developer.networking.wifi-info</key>
+		<true/>
+		<key>com.apple.developer.networking.HotspotConfiguration</key>
+		<true/>
+		<!--  -->
 		<key>NSCameraUsageDescription</key>
 		<string>This app needs camera access to scan QR codes</string>
 		<key>CFBundleDevelopmentRegion</key>

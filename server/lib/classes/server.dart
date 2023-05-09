@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:server/classes/courseandstudent.dart';
-import 'package:server/classes/rsa.dart';
+import 'package:server/classes/encrypt.dart';
 import 'package:server/constrant.dart';
 
 class Server {
@@ -14,16 +14,14 @@ class Server {
   }
 
   Server._internal();
-  Rsa rsa = Rsa();
-  late String ip, user, pass, code;
+  Encrypt encrypt = Encrypt();
+  late String ip, ssid, pass, code;
   late int port;
   ServerSocket? _serverSocket;
   bool running = false;
   bool _runChecker = true;
   ServerStatuses serverstatus = ServerStatuses.normal;
-  List<String> logs = [];
   StatusConnection connection = StatusConnection.wifi;
-  final List<Socket> _clients = [];
 
   void _checkServer() {
     Timer.periodic(const Duration(seconds: 3), (timer) async {
@@ -34,7 +32,7 @@ class Server {
           await Socket.connect(
             ip,
             port,
-            timeout: const Duration(seconds: 5),
+            timeout: const Duration(seconds: 3),
           );
         } catch (e) {
           stopManual();
@@ -60,7 +58,6 @@ class Server {
         running = true;
         _runChecker = true;
         _checkServer();
-        logs.add("Server is running on : $ip:$port");
         _serverSocket!.listen((Socket event) {
           handleConnection(event);
         });
@@ -85,15 +82,12 @@ class Server {
   }
 
   void handleConnection(Socket client) {
-    logs.add(
-        "Client ${client.remoteAddress.address}:${client.remotePort} Connected");
-
     client.listen(
       (Uint8List data) {
         final encryptedData = String.fromCharCodes(data);
-        final message = rsa.decrypt(encryptedData);
+        final message = encrypt.decrypt(encryptedData);
         String result = '';
-        _clients.add(client);
+        
         if (message.split('-').length == 3) {
           List temp = message.split('-');
           String id = temp[0];
@@ -139,19 +133,14 @@ class Server {
               result = '{"result": "400"}'; // ?? Student Number Not Found
             }
           }
-          String data = rsa.encrypt(result);
+          String data = encrypt.encrypt(result);
           client.write(data);
         }
-
-        logs.add('$message -> $result');
       },
       onError: (error) {
-        logs.add(error);
         client.close();
       },
       onDone: () {
-        _clients.remove(client);
-        logs.add("Server: Client left.");
         client.close();
       },
     );

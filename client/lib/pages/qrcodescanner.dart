@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api, unused_element
 
 import 'dart:io';
-
 import 'package:android_id/android_id.dart';
 import 'package:client/classes/transfer.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -149,7 +148,7 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
         (barcode) => setState(
           (() {
             String decrypted =
-                TransferData().rsa.decrypt(barcode.code.toString());
+                TransferData().encrypt.decrypt(barcode.code.toString());
             bool isValid = decrypted.split('-').length == 5;
 
             if (barcode.code != null && isValid) {
@@ -180,11 +179,11 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
     var deviceInfo = DeviceInfoPlugin();
     if (Platform.isIOS) {
       var iosDeviceInfo = await deviceInfo.iosInfo;
-      TransferData().client.ID =
+      TransferData().client.id =
           iosDeviceInfo.identifierForVendor; // unique ID on iOS
     } else if (Platform.isAndroid) {
       var androidIdPlugin = const AndroidId();
-      TransferData().client.ID =
+      TransferData().client.id =
           await androidIdPlugin.getId(); // unique ID on Android
     }
   }
@@ -274,15 +273,8 @@ class _DialogState extends State<Dialog> {
             break;
         }
         TransferData().client.result = null;
-        // return _description ?? "error";
-      } else {
-        _description = 'لطفا دوباره تلاش کنید';
-        // return _description ?? "error";
       }
       respons.value = "newRespons";
-      Future.delayed(Duration(seconds: 5), () {
-        print(respons.value.isNotEmpty);
-      });
     }
   }
 

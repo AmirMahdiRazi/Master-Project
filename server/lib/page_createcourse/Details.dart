@@ -127,10 +127,19 @@ class _DetailsState extends State<Details> {
         stdNumber.isNotEmpty;
 
     int lenColumn = widget.files[0].length;
-    bool isValidFname=false,isValidLname=false,isValidStdNumber=false;
-    fName.isNotEmpty ? isValidFname = int.parse(fName) - 1 < lenColumn && int.parse(fName) - 1 >= 0 : Null;
-    lName.isNotEmpty ? isValidLname = int.parse(lName) - 1 < lenColumn && int.parse(lName) - 1 >= 0 : Null;
-    stdNumber.isNotEmpty ? isValidStdNumber = int.parse(stdNumber) - 1 < lenColumn && int.parse(stdNumber) - 1 >= 0 : Null;
+    bool isValidFname = false, isValidLname = false, isValidStdNumber = false;
+    fName.isNotEmpty
+        ? isValidFname =
+            int.parse(fName) - 1 < lenColumn && int.parse(fName) - 1 >= 0
+        : Null;
+    lName.isNotEmpty
+        ? isValidLname =
+            int.parse(lName) - 1 < lenColumn && int.parse(lName) - 1 >= 0
+        : Null;
+    stdNumber.isNotEmpty
+        ? isValidStdNumber = int.parse(stdNumber) - 1 < lenColumn &&
+            int.parse(stdNumber) - 1 >= 0
+        : Null;
 
     bool isValidAll = isValidFname && isValidLname && isValidStdNumber;
     if (isFillAll && isValidAll) {

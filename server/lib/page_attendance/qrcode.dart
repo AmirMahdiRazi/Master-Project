@@ -7,15 +7,15 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:server/classes/server.dart';
 
 // ignore: must_be_immutable
-class QRGenearator extends StatefulWidget {
-  QRGenearator({super.key, required this.size});
+class QRGenerator extends StatefulWidget {
+  QRGenerator({super.key, required this.size});
 
   int size;
   @override
-  State<QRGenearator> createState() => _QRGenearatorState();
+  State<QRGenerator> createState() => _QRGeneratorState();
 }
 
-class _QRGenearatorState extends State<QRGenearator> {
+class _QRGeneratorState extends State<QRGenerator> {
   TextEditingController textEditingController = TextEditingController();
   late String plainText;
   late bool _stop;
@@ -26,15 +26,15 @@ class _QRGenearatorState extends State<QRGenearator> {
     Server().code = random.nextInt(99999999).toString();
     Server().ipConvert();
     plainText =
-        '${Server().user}-${Server().pass}-${Server().ipConvert()}-${Server().port}-${Server().code}';
-    text = Server().rsa.encrypt(plainText);
+        '${Server().ssid}-${Server().pass}-${Server().ipConvert()}-${Server().port}-${Server().code}';
+    text = Server().encrypt.encrypt(plainText);
     _stop = false;
     Timer.periodic(const Duration(seconds: 30), (t) {
       if (Server().running) {
         Server().code = random.nextInt(99999999).toString();
         plainText =
-            '${Server().user}-${Server().pass}-${Server().ipConvert()}-${Server().port}-${Server().code}';
-        text = Server().rsa.encrypt(plainText);
+            '${Server().ssid}-${Server().pass}-${Server().ipConvert()}-${Server().port}-${Server().code}';
+        text = Server().encrypt.encrypt(plainText);
       }
 
       if (_stop) {

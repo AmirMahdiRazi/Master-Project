@@ -85,7 +85,7 @@ class _WifiPageState extends State<WifiPage> {
                       height: 100,
                       onPress: () {
                         Server().pass = widget.textControllerPassword.text;
-                        Server().user = wifiName!;
+                        Server().ssid = wifiName!;
                         Server().ip = wifiIP!;
                         Server().getUnusedPort(wifiIP!);
                         Future.delayed(const Duration(milliseconds: 505), () {

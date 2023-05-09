@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:check_vpn_connection/check_vpn_connection.dart';
 import 'package:client/backgroundwidget.dart';
 import 'package:client/pages/qrcodescanner.dart';
-// import 'package:client/pages/wifi_connection.dart';
 import 'package:flutter/material.dart';
 import 'package:open_settings/open_settings.dart';
 import 'package:wifi_iot/wifi_iot.dart';
@@ -137,7 +136,8 @@ class _ChangeStatusState extends State<ChangeStatus> {
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 25.0),
-          child: Text(widget.description),
+          child:
+              Text(widget.description, style: TextStyle(color: Colors.white)),
         ),
         const SizedBox(
           height: 25,

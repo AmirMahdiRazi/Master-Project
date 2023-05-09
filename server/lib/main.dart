@@ -20,6 +20,11 @@ void main() async {
   testWindowFunctions();
   runApp(const MyApp());
   checkDevice();
+  Size screenSize = WidgetsBinding.instance.window.physicalSize;
+  double width = screenSize.width;
+  double height = screenSize.height;
+  print(width);
+  print(height);
 }
 
 class MyApp extends StatefulWidget {
@@ -55,8 +60,8 @@ void checkDevice() async {
 
 Future testWindowFunctions() async {
   WindowOptions windowOptions = const WindowOptions(
-    minimumSize: Size(1400, 800),
-    size: Size(1400, 800),
+    minimumSize: Size(800, 600),
+    // fullScreen: true,
     center: true,
     titleBarStyle: TitleBarStyle.normal,
   );

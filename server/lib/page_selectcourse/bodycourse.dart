@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:server/classes/courseandstudent.dart';
 import 'package:server/classes/base.dart';
 import 'package:server/page_selectcourse/selectcourse.dart';
-import 'package:server/page_selectcourse/selectnumbermeetting.dart';
+import 'package:server/page_selectcourse/selectnumbermeeting.dart';
 import 'package:server/widgets/button.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -53,7 +53,7 @@ class _BodyCourseState extends State<BodyCourse> with WindowListener {
                           files: courses,
                           page: _page,
                         )
-                      : SelectNumberMeetting(
+                      : SelectNumberMeeting(
                           def: () {
                             setState(() {});
                           },

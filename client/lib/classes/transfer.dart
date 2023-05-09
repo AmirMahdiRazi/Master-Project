@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:client/classes/rsa.dart';
+import 'package:client/classes/encrypt.dart';
 import 'package:plugin_wifi_connect/plugin_wifi_connect.dart';
 
-import 'client_class.dart';
+import 'client.dart';
 
 class TransferData {
   static final TransferData _client = TransferData._internal();
@@ -17,25 +17,18 @@ class TransferData {
   Client client = Client();
 
   late Function responsServer;
-  Rsa rsa = Rsa();
+  Encrypt encrypt = Encrypt();
 
   void transferDataWifi() async {
     try {
       final socket = await Socket.connect(client.ipServer, client.port,
           timeout: const Duration(seconds: 3));
-
-      client.logs.add(
-          "Connected to: ${socket.remoteAddress.address}:${socket.remotePort}");
-
       socket.listen(
         (Uint8List data) {
           final encryptResponse = String.fromCharCodes(data);
-          final serverResponse = rsa.decrypt(encryptResponse);
-          print(serverResponse);
-          client.logs.add("Response: $serverResponse");
+          final serverResponse = encrypt.decrypt(encryptResponse);
           if (serverResponse.contains('{')) {
             var res = json.decode(serverResponse);
-            client.logs.add("Result = ${res["result"]}");
             client.result = {
               'result': res["result"],
             };
@@ -45,21 +38,18 @@ class TransferData {
           }
         },
         onError: (error) {
-          client.logs.add("Client: $error");
           socket.destroy();
         },
         onDone: () {
-          client.logs.add("Client: Server left.");
           socket.destroy();
         },
       );
-      String data = rsa.encrypt(client.combine_data());
+      String data = encrypt.encrypt(client.combineData());
       socket.write(data);
     } catch (e) {
       client.result = {'result': '700'};
       responsServer();
       PluginWifiConnect.disconnect();
-      client.logs.add("can not find server");
     }
   }
 }

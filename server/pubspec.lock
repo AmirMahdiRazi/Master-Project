@@ -113,13 +113,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.7.8"
-  desktop_window:
-    dependency: "direct main"
-    description:
-      name: desktop_window
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.4.0"
   encrypt:
     dependency: "direct main"
     description:
@@ -233,13 +226,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
-  lottie:
-    dependency: "direct main"
-    description:
-      name: lottie
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.2.0"
   matcher:
     dependency: transitive
     description:
@@ -429,4 +415,4 @@ packages:
     version: "3.1.1"
 sdks:
   dart: ">=2.18.4 <3.0.0"
-  flutter: ">=3.3.0"
+  flutter: ">=2.11.0"
