@@ -23,7 +23,7 @@ DisableProgramGroupPage=yes
 LicenseFile=C:\Users\AMR\Desktop\توجه.rtf
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
-OutputDir=C:\Users\AMR\Desktop\Flutter\Project\server\New folder
+OutputDir=C:\Users\AMR\Desktop\Flutter\Project\server\installer_800_600
 OutputBaseFilename=Setup
 SetupIconFile=C:\Users\AMR\Downloads\app_icon.ico
 Compression=lzma
